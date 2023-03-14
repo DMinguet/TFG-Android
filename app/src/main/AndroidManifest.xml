@@ -15,7 +15,11 @@
         android:theme="@style/Theme.TFGDaniMinguetAndroid"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".MainActivity">
+        </activity>
+
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
