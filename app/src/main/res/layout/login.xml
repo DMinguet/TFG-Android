@@ -30,18 +30,43 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFrasesCelebres" />
 
-    <EditText
-        android:id="@+id/etUsernameLogin"
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilUsernameLogin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="70dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Nombre de usuario"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginEnd="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/tvLogin">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etUsernameLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre de usuario" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilContrasenyaLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="70dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilUsernameLogin">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etContrasenyaLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnLogin"
@@ -52,36 +77,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etContrasenyaLogin" />
-
-    <EditText
-        android:id="@+id/etContrasenyaLogin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="70dp"
-        android:ems="10"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toStartOf="@+id/verContrasenya"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUsernameLogin" />
-
-    <com.google.android.material.chip.Chip
-        android:id="@+id/verContrasenya"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="50dp"
-        android:checked="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:chipBackgroundColor="#C8CACA"
-        app:chipIcon="@android:drawable/ic_menu_view"
-        app:chipIconTint="#000000"
-        app:layout_constraintBottom_toBottomOf="@+id/etContrasenyaLogin"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/etContrasenyaLogin"
-        app:layout_constraintTop_toTopOf="@+id/etContrasenyaLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/tilContrasenyaLogin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

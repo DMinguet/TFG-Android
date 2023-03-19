@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -17,6 +18,18 @@ public interface IAPIService {
 
     @GET("usuario/all")
     Call<List<Usuario>> getUsuarios();
+
+    @GET("usuario/{id}")
+    Call<Usuario> getUsuario();
+
+    @POST("usuario/add")
+    Call<Boolean> addUsuario(@Body Usuario usuario);
+
+    @PUT("usuario/update")
+    Call<Boolean> updateUsuario(@Body Usuario usuario);
+
+    @DELETE("usuario/{id}")
+    Call<Boolean> deleteUsuario(@Body Usuario usuario);
 
     @POST("usuario/login")
     Call<Usuario> logUsuario (

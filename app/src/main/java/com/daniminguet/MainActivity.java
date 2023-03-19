@@ -3,19 +3,43 @@ package com.daniminguet;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.daniminguet.fragments.FragmentPerfil;
+import com.daniminguet.fragments.FragmentPrincipal;
+import com.daniminguet.models.Usuario;
+import com.daniminguet.rest.RestClient;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.Calendar;
+
+public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener {
+
+    private final IAPIService apiService = RestClient.getInstance();
+    private Usuario usuarioActivo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cargarDatos();
+    }
+
+    private void cargarDatos() {
+        cargarUsuarioActivo();
+    }
+
+    private void cargarUsuarioActivo() {
+        if (usuarioActivo == null) {
+            usuarioActivo = (Usuario) getIntent().getSerializableExtra("user");
+        }
     }
 
     @Override
@@ -44,5 +68,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Usuario getUsuario() {
+        if (usuarioActivo == null) {
+            cargarUsuarioActivo();
+        }
+        return usuarioActivo;
     }
 }
