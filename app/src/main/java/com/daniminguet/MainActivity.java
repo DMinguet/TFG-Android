@@ -19,9 +19,8 @@ import com.daniminguet.rest.RestClient;
 
 import java.util.Calendar;
 
-public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener {
+public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener, FragmentPerfil.IOnAttachListener{
 
-    private final IAPIService apiService = RestClient.getInstance();
     private Usuario usuarioActivo;
 
     @Override
@@ -52,7 +51,15 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.iPerfil) {
+        if (id == R.id.iInicio) {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction()
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .replace(R.id.frgPrincipal, FragmentPrincipal.class, null)
+                    .commit();
+            return true;
+        } else if (id == R.id.iPerfil) {
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction()
                     .setReorderingAllowed(true)
@@ -60,9 +67,7 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
                     .replace(R.id.frgPrincipal, FragmentPerfil.class, null)
                     .commit();
             return true;
-        }
-
-        if (id == R.id.iCerrarSesion) {
+        }else if (id == R.id.iCerrarSesion) {
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             return true;
         }
@@ -71,10 +76,15 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
     }
 
     @Override
-    public Usuario getUsuario() {
+    public Usuario getUsuarioFrgPrinc() {
         if (usuarioActivo == null) {
             cargarUsuarioActivo();
         }
+        return usuarioActivo;
+    }
+
+    @Override
+    public Usuario getUsuarioFrgPerfl() {
         return usuarioActivo;
     }
 }

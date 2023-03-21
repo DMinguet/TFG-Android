@@ -4,6 +4,11 @@
     tools:context="com.daniminguet.preferencias.MainActivity">
 
     <item
+        android:id="@+id/iInicio"
+        android:orderInCategory="100"
+        android:title="Inicio"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/iPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

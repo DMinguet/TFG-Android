@@ -8,13 +8,14 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
 import com.daniminguet.models.Usuario;
 
 public class FragmentPrincipal extends Fragment {
     public interface IOnAttachListener {
-        Usuario getUsuario();
+        Usuario getUsuarioFrgPrinc();
     }
 
     private Usuario usuario;
@@ -34,12 +35,60 @@ public class FragmentPrincipal extends Fragment {
         if (usuario.getAdmin() == 0) {
             btnAdmin.setVisibility(View.INVISIBLE);
         }
+
+        btnTemarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentTemarios.class, null)
+                        .commit();
+            }
+        });
+
+        btnExamenes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentExamenes.class, null)
+                        .commit();
+            }
+        });
+
+        btnNotas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentExamenes.class, null)
+                        .commit();
+            }
+        });
+
+        btnAdmin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentAdmin.class, null)
+                        .commit();
+            }
+        });
     }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         IOnAttachListener attachListener = (IOnAttachListener) context;
-        usuario = attachListener.getUsuario();
+        usuario = attachListener.getUsuarioFrgPrinc();
     }
 }
