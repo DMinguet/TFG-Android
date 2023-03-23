@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.HashGenerator;
-import com.daniminguet.IAPIService;
+import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.R;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;

@@ -1,6 +1,6 @@
 package com.daniminguet.rest;
 
-import com.daniminguet.IAPIService;
+import com.daniminguet.interfaces.IAPIService;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

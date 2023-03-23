@@ -1,15 +1,29 @@
 package com.daniminguet.models;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Examen implements Serializable {
+public class Temario implements Serializable {
     private int id;
+    private int tema;
     private String titulo;
-    private List<Usuario> usuarios;
+    private String pdf;
     private List<Preguntas> preguntas;
+
+    public int getId() {
+        return id;
+    }
+
+    public int getTema() {
+        return tema;
+    }
+
+    public void setTema(Integer tema) {
+        this.tema = tema;
+    }
 
     public String getTitulo() {
         return titulo;
@@ -19,12 +33,12 @@ public class Examen implements Serializable {
         this.titulo = titulo;
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
+    public String getPdf() {
+        return pdf;
     }
 
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+    public void setPdf(String pdf) {
+        this.pdf = pdf;
     }
 
     public List<Preguntas> getPreguntas() {
@@ -47,10 +61,11 @@ public class Examen implements Serializable {
 
     @Override
     public String toString() {
-        return "Examen{" +
+        return "Temario{" +
                 "id=" + id +
+                ", tema=" + tema +
                 ", titulo='" + titulo + '\'' +
-                ", usuarios=" + usuarios +
+                ", pdf='" + pdf + '\'' +
                 ", preguntas=" + preguntas +
                 '}';
     }

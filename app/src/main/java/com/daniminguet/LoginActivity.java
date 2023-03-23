@@ -2,25 +2,18 @@ package com.daniminguet;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
