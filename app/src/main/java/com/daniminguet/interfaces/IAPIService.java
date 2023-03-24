@@ -5,8 +5,10 @@ import com.daniminguet.models.Preguntas;
 import com.daniminguet.models.Temario;
 import com.daniminguet.models.Usuario;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -16,14 +18,16 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 public interface IAPIService {
 
     @GET("examen/all")
-    Call<List<Temario>> getExamenes();
+    Call<List<Examen>> getExamenes();
 
     @GET("examen/{id}")
-    Call<Temario> getExamen();
+    Call<Examen> getExamen(@Path("id") int id);
 
     @POST("examen/add")
     Call<Boolean> addExamen(@Body Examen examen);
@@ -35,10 +39,10 @@ public interface IAPIService {
     Call<Boolean> deleteExamen(@Body Examen examen);
 
     @GET("preguntas/all")
-    Call<List<Temario>> getPreguntas();
+    Call<List<Preguntas>> getPreguntas();
 
     @GET("preguntas/{id}")
-    Call<Temario> getPregunta();
+    Call<Preguntas> getPregunta(@Path("id") int id);
 
     @POST("preguntas/add")
     Call<Boolean> addPregunta(@Body Preguntas preguntas);
@@ -53,7 +57,7 @@ public interface IAPIService {
     Call<List<Temario>> getTemarios();
 
     @GET("temario/{id}")
-    Call<Temario> getTemario();
+    Call<Temario> getTemario(@Path("id") int id);
 
     @POST("temario/add")
     Call<Boolean> addTemario(@Body Temario temario);
@@ -68,7 +72,7 @@ public interface IAPIService {
     Call<List<Usuario>> getUsuarios();
 
     @GET("usuario/{id}")
-    Call<Usuario> getUsuario();
+    Call<Usuario> getUsuario(@Path("id") int id);
 
     @POST("usuario/add")
     Call<Boolean> addUsuario(@Body Usuario usuario);

@@ -1,9 +1,5 @@
 package com.daniminguet.adaptadores;
 
-import android.content.Intent;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daniminguet.R;
+import com.daniminguet.interfaces.ITemarioListener;
 import com.daniminguet.models.Temario;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 public class AdaptadorTemarios extends RecyclerView.Adapter<AdaptadorTemarios.ViewHolder> {
     private final List<Temario> temarios;
+    private final ITemarioListener temarioListener;
 
-    public AdaptadorTemarios(List<Temario> temarios) {
+    public AdaptadorTemarios(List<Temario> temarios, ITemarioListener temarioListener) {
         this.temarios = temarios;
+        this.temarioListener = temarioListener;
     }
 
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_temarios, parent, false);
 
-        return new ViewHolder(itemView);
+        return new ViewHolder(itemView, temarioListener);
     }
 
     @Override
@@ -48,14 +41,16 @@ public class AdaptadorTemarios extends RecyclerView.Adapter<AdaptadorTemarios.Vi
         return temarios.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvNumTema;
         private final TextView tvTituloTema;
+        private final ITemarioListener temarioListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, ITemarioListener temarioListener) {
             super(itemView);
             this.tvNumTema = itemView.findViewById(R.id.tvNumTema);
             this.tvTituloTema = itemView.findViewById(R.id.tvTituloTema);
+            this.temarioListener = temarioListener;
             itemView.setOnClickListener(this);
         }
 
@@ -66,32 +61,9 @@ public class AdaptadorTemarios extends RecyclerView.Adapter<AdaptadorTemarios.Vi
 
         @Override
         public void onClick(View v) {
-            try {
-                URL url = new URL("http://localhost:8080/temario/" + temarios.get(getAdapterPosition()).getId());
-                HttpURLConnection c = (HttpURLConnection) url.openConnection();
-                c.setRequestMethod("GET");
-                c.setDoOutput(true);
-                c.connect();
-
-                String Path = Environment.getExternalStorageDirectory() + "/download/";
-                Log.v("PdfManager", "PATH: " + Path);
-                File file = new File(Path);
-                file.mkdirs();
-                FileOutputStream fos = new FileOutputStream(temarios.get(getAdapterPosition()).getPdf());
-
-                InputStream is = c.getInputStream();
-
-                byte[] buffer = new byte[702];
-                int len1 = 0;
-                while ((len1 = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, len1);
-                }
-                fos.close();
-                is.close();
-            } catch (IOException e) {
-                Log.d("PdfManager", "Error: " + e);
+            if (temarioListener != null) {
+                temarioListener.onTemarioSeleccionado(getAdapterPosition() +1);
             }
-            Log.v("PdfManager", "Check: ");
         }
     }
 }

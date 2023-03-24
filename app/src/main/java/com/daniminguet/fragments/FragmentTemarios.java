@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.R;
 import com.daniminguet.adaptadores.AdaptadorTemarios;
+import com.daniminguet.interfaces.ITemarioListener;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
 
@@ -24,6 +25,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FragmentTemarios extends Fragment {
+    private ITemarioListener listener;
+
     public FragmentTemarios() {
         super(R.layout.lista);
     }
@@ -40,7 +43,7 @@ public class FragmentTemarios extends Fragment {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
 
-                    AdaptadorTemarios adaptadorTemarios = new AdaptadorTemarios(response.body());
+                    AdaptadorTemarios adaptadorTemarios = new AdaptadorTemarios(response.body(), listener);
                     rvLista.setHasFixedSize(true);
                     rvLista.setAdapter(adaptadorTemarios);
                     rvLista.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
@@ -57,5 +60,6 @@ public class FragmentTemarios extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        listener = (ITemarioListener) context;
     }
 }

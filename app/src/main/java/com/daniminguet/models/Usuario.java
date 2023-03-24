@@ -18,6 +18,14 @@ public class Usuario implements Serializable {
         this.contrasenya = contrasenya;
     }
 
+    public Usuario(String nombre, String apellidos, String nombreUsuario, String contrasenya, String email) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.nombreUsuario = nombreUsuario;
+        this.contrasenya = contrasenya;
+        this.email = email;
+    }
+
     public int getId() {
         return id;
     }
