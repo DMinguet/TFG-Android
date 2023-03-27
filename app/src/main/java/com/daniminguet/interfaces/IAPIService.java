@@ -36,7 +36,7 @@ public interface IAPIService {
     Call<Boolean> updateExamen(@Body Examen examen);
 
     @DELETE("examen/{id}")
-    Call<Boolean> deleteExamen(@Body Examen examen);
+    Call<Boolean> deleteExamen(@Path("id") Integer id);
 
     @GET("preguntas/all")
     Call<List<Preguntas>> getPreguntas();
@@ -51,7 +51,7 @@ public interface IAPIService {
     Call<Boolean> updatePregunta(@Body Preguntas preguntas);
 
     @DELETE("preguntas/{id}")
-    Call<Boolean> deletePregunta(@Body Preguntas preguntas);
+    Call<Boolean> deletePregunta(@Path("id") Integer id);
 
     @GET("temario/all")
     Call<List<Temario>> getTemarios();
@@ -66,7 +66,7 @@ public interface IAPIService {
     Call<Boolean> updateTemario(@Body Temario temario);
 
     @DELETE("temario/{id}")
-    Call<Boolean> deleteTemario(@Body Temario temario);
+    Call<Boolean> deleteTemario(@Path("id") Integer id);
 
     @GET("usuario/all")
     Call<List<Usuario>> getUsuarios();
@@ -81,7 +81,7 @@ public interface IAPIService {
     Call<Boolean> updateUsuario(@Body Usuario usuario);
 
     @DELETE("usuario/{id}")
-    Call<Boolean> deleteUsuario(@Body Usuario usuario);
+    Call<Boolean> deleteUsuario(@Path("id") Integer id);
 
     @POST("usuario/login")
     Call<Usuario> logUsuario (

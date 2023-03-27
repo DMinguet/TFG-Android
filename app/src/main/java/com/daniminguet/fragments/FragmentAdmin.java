@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
 import com.daniminguet.fragments.usuarios.FragmentAnyadirUsuario;
+import com.daniminguet.fragments.usuarios.FragmentEliminarUsuario;
+import com.daniminguet.fragments.usuarios.FragmentModificarUsuario;
 
 public class FragmentAdmin extends Fragment implements View.OnClickListener{
     public FragmentAdmin() {
@@ -71,14 +73,14 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentModificarUsuario.class, null)
                         .commit();
                 break;
             case R.id.btnEliminarUsuarioAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentEliminarUsuario.class, null)
                         .commit();
                 break;
             case R.id.btnAnyadirTemarioAdmin:
