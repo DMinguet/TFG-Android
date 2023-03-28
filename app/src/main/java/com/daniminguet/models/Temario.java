@@ -11,7 +11,6 @@ public class Temario implements Serializable {
     private int tema;
     private String titulo;
     private String pdf;
-    private List<Preguntas> preguntas;
 
     public Temario(int tema, String titulo, String pdf) {
         this.tema = tema;
@@ -47,14 +46,6 @@ public class Temario implements Serializable {
         this.pdf = pdf;
     }
 
-    public List<Preguntas> getPreguntas() {
-        return preguntas;
-    }
-
-    public void setPreguntas(List<Preguntas> preguntas) {
-        this.preguntas = preguntas;
-    }
-
     @Override
     public boolean equals(@Nullable Object obj) {
         return super.equals(obj);
@@ -72,7 +63,6 @@ public class Temario implements Serializable {
                 ", tema=" + tema +
                 ", titulo='" + titulo + '\'' +
                 ", pdf='" + pdf + '\'' +
-                ", preguntas=" + preguntas +
                 '}';
     }
 }

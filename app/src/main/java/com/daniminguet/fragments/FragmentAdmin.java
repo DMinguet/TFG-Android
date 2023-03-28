@@ -11,6 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
+import com.daniminguet.fragments.examenes.FragmentAnyadirExamen;
+import com.daniminguet.fragments.examenes.FragmentEliminarExamen;
+import com.daniminguet.fragments.examenes.FragmentModificarExamen;
+import com.daniminguet.fragments.preguntas.FragmentAnyadirPregunta;
+import com.daniminguet.fragments.preguntas.FragmentEliminarPregunta;
+import com.daniminguet.fragments.preguntas.FragmentModificarPregunta;
 import com.daniminguet.fragments.temarios.FragmentAnyadirTemario;
 import com.daniminguet.fragments.temarios.FragmentEliminarTemario;
 import com.daniminguet.fragments.temarios.FragmentModificarTemario;
@@ -111,42 +117,42 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentAnyadirExamen.class, null)
                         .commit();
                 break;
             case R.id.btnModificarExamenAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentModificarExamen.class, null)
                         .commit();
                 break;
             case R.id.btnEliminarExamenAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentEliminarExamen.class, null)
                         .commit();
                 break;
             case R.id.btnAnyadirPreguntaAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentAnyadirPregunta.class, null)
                         .commit();
                 break;
             case R.id.btnModificarPreguntaAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentModificarPregunta.class, null)
                         .commit();
                 break;
             case R.id.btnEliminarPreguntaAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentEliminarPregunta.class, null)
                         .commit();
                 break;
             case R.id.btnVolverAdmin:

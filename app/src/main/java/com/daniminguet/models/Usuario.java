@@ -11,7 +11,6 @@ public class Usuario implements Serializable {
     private String contrasenya;
     private String email;
     private Byte admin;
-    private List<Examen> examenes;
 
     public Usuario(String nombreUsuario, String contrasenya) {
         this.nombreUsuario = nombreUsuario;
@@ -54,10 +53,6 @@ public class Usuario implements Serializable {
         return admin;
     }
 
-    public List<Examen> getExamenes() {
-        return examenes;
-    }
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -80,10 +75,6 @@ public class Usuario implements Serializable {
 
     public void setAdmin(Byte admin) {
         this.admin = admin;
-    }
-
-    public void setExamenes(List<Examen> examenes) {
-        this.examenes = examenes;
     }
 
     @Override
@@ -111,7 +102,6 @@ public class Usuario implements Serializable {
                 ", contrasenya='" + contrasenya + '\'' +
                 ", email='" + email + '\'' +
                 ", admin=" + admin +
-                ", examenes=" + examenes +
                 '}';
     }
 }

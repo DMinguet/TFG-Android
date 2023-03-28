@@ -7,22 +7,25 @@ import java.util.List;
 
 public class Preguntas implements Serializable {
     private int id;
-    private Temario temario;
+    private int temario;
     private String pregunta;
     private Respuesta respuesta;
-    private List<Examen> examenes;
 
-    public Preguntas(Temario temario, String pregunta, Respuesta respuesta) {
+    public Preguntas(int temario, String pregunta, Respuesta respuesta) {
         this.temario = temario;
         this.pregunta = pregunta;
         this.respuesta = respuesta;
     }
 
-    public Temario getTemario() {
+    public int getId() {
+        return id;
+    }
+
+    public int getTemario() {
         return temario;
     }
 
-    public void setTemario(Temario temario) {
+    public void setTemario(int temario) {
         this.temario = temario;
     }
 
@@ -42,14 +45,6 @@ public class Preguntas implements Serializable {
         this.respuesta = respuesta;
     }
 
-    public List<Examen> getExamenes() {
-        return examenes;
-    }
-
-    public void setExamenes(List<Examen> examenes) {
-        this.examenes = examenes;
-    }
-
     @Override
     public boolean equals(@Nullable Object obj) {
         return super.equals(obj);
@@ -67,7 +62,6 @@ public class Preguntas implements Serializable {
                 ", temario=" + temario +
                 ", pregunta='" + pregunta + '\'' +
                 ", respuesta=" + respuesta +
-                ", examenes=" + examenes +
                 '}';
     }
 }
