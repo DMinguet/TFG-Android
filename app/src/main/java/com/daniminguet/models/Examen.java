@@ -9,6 +9,14 @@ public class Examen implements Serializable {
     private int id;
     private String titulo;
 
+    public Examen(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public String getTitulo() {
         return titulo;
     }
