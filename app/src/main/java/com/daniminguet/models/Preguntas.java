@@ -12,6 +12,12 @@ public class Preguntas implements Serializable {
     private Respuesta respuesta;
     private List<Examen> examenes;
 
+    public Preguntas(Temario temario, String pregunta, Respuesta respuesta) {
+        this.temario = temario;
+        this.pregunta = pregunta;
+        this.respuesta = respuesta;
+    }
+
     public Temario getTemario() {
         return temario;
     }

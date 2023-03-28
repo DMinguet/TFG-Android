@@ -1,7 +1,5 @@
 package com.daniminguet.fragments.usuarios;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -12,9 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.HashGenerator;
 import com.daniminguet.R;
+import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
@@ -44,6 +44,7 @@ public class FragmentAnyadirUsuario extends Fragment {
         EditText etContrasenya = view.findViewById(R.id.etContrasenyaAnyadir);
         EditText etEmail = view.findViewById(R.id.etEmail);
         Button btnAnyadir = view.findViewById(R.id.btnAnyadirUsuario);
+        Button btnVolver = view.findViewById(R.id.btnVolverAnyadirUsuario);
 
         btnAnyadir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +89,6 @@ public class FragmentAnyadirUsuario extends Fragment {
                 }
 
                 apiService.addUsuario(nuevoUsuario).enqueue(new Callback<Boolean>() {
-                    @SuppressLint("ResourceAsColor")
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if(response.isSuccessful()) {
@@ -117,11 +117,18 @@ public class FragmentAnyadirUsuario extends Fragment {
                 });
             }
         });
-    }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentAdmin.class, null)
+                        .commit();
+            }
+        });
     }
 
     private boolean validarEmail(String email) {

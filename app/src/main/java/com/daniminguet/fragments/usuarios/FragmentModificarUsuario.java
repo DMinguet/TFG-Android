@@ -2,7 +2,7 @@ package com.daniminguet.fragments.usuarios;
 
 import android.database.DataSetObserver;
 import android.os.Bundle;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,9 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.HashGenerator;
 import com.daniminguet.R;
+import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
@@ -27,6 +29,7 @@ import com.daniminguet.rest.RestClient;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +38,6 @@ import retrofit2.Response;
 public class FragmentModificarUsuario extends Fragment implements SpinnerAdapter {
     private String[] nombreUsuarios;
     private List<Usuario> usuarios;
-    private Usuario usuarioSeleccionado;
     private IAPIService apiService;
 
     public FragmentModificarUsuario() {
@@ -54,6 +56,7 @@ public class FragmentModificarUsuario extends Fragment implements SpinnerAdapter
         CheckBox admin = view.findViewById(R.id.checkBoxAdmin);
         EditText etNuevoValor = view.findViewById(R.id.etValorUsuario);
         Button btnModificar = view.findViewById(R.id.btnModificarUsuario);
+        Button btnVolver = view.findViewById(R.id.btnVolverModificarUsuario);
 
         apiService.getUsuarios().enqueue(new Callback<List<Usuario>>() {
             @Override
@@ -142,6 +145,10 @@ public class FragmentModificarUsuario extends Fragment implements SpinnerAdapter
                                             etNuevoValor.setError("No has indicado el nuevo valor");
                                             etNuevoValor.requestFocus();
                                             return;
+                                        } else if (!validarEmail(nuevoValor)) {
+                                            etNuevoValor.setError("Email no válido");
+                                            etNuevoValor.requestFocus();
+                                            return;
                                         }
 
                                         usuarioCorrespondiente.setEmail(nuevoValor);
@@ -196,6 +203,18 @@ public class FragmentModificarUsuario extends Fragment implements SpinnerAdapter
                 Toast.makeText(getContext(), "No se han podido obtener los usuarios", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnVolver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentAdmin.class, null)
+                        .commit();
+            }
+        });
     }
 
     private void modificarUsuario(Usuario usuario) {
@@ -214,6 +233,11 @@ public class FragmentModificarUsuario extends Fragment implements SpinnerAdapter
                 Toast.makeText(getContext(), "No se ha podido modificar el usuario", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private boolean validarEmail(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
     }
 
     private Usuario obtenerUsuario (String nombreUsuario) {

@@ -13,6 +13,12 @@ public class Temario implements Serializable {
     private String pdf;
     private List<Preguntas> preguntas;
 
+    public Temario(int tema, String titulo, String pdf) {
+        this.tema = tema;
+        this.titulo = titulo;
+        this.pdf = pdf;
+    }
+
     public int getId() {
         return id;
     }

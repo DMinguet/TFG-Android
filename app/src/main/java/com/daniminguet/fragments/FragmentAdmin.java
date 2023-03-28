@@ -11,6 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
+import com.daniminguet.fragments.temarios.FragmentAnyadirTemario;
+import com.daniminguet.fragments.temarios.FragmentEliminarTemario;
+import com.daniminguet.fragments.temarios.FragmentModificarTemario;
 import com.daniminguet.fragments.usuarios.FragmentAnyadirUsuario;
 import com.daniminguet.fragments.usuarios.FragmentEliminarUsuario;
 import com.daniminguet.fragments.usuarios.FragmentModificarUsuario;
@@ -87,21 +90,21 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentAnyadirTemario.class, null)
                         .commit();
                 break;
             case R.id.btnModificarTemarioAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentModificarTemario.class, null)
                         .commit();
                 break;
             case R.id.btnEliminarTemarioAdmin:
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentAnyadirUsuario.class, null)
+                        .replace(R.id.frgPrincipal, FragmentEliminarTemario.class, null)
                         .commit();
                 break;
             case R.id.btnAnyadirExamenAdmin:

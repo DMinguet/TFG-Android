@@ -15,8 +15,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
+import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
@@ -48,6 +50,7 @@ public class FragmentEliminarUsuario extends Fragment implements SpinnerAdapter 
         TextView tvNombreApellidos = view.findViewById(R.id.tvNombreApellidosUsuario);
         TextView tvEmail = view.findViewById(R.id.tvEmailUsuario);
         Button btnEliminar = view.findViewById(R.id.btnEliminarUsuario);
+        Button btnVolver = view.findViewById(R.id.btnVolverEliminarUsuario);
 
         apiService.getUsuarios().enqueue(new Callback<List<Usuario>>() {
             @Override
@@ -100,15 +103,31 @@ public class FragmentEliminarUsuario extends Fragment implements SpinnerAdapter 
                             Toast.makeText(getContext(), "Usuario eliminado", Toast.LENGTH_SHORT).show();
                             tvNombreApellidos.setText("");
                             tvEmail.setText("");
-                            recargarUsuarios();
-                            nombreUsuarios = new String[usuarios.size()];
 
-                            for (int i = 0; i < nombreUsuarios.length; i++) {
-                                nombreUsuarios[i] = usuarios.get(i).getNombreUsuario();
-                            }
+                            apiService.getUsuarios().enqueue(new Callback<List<Usuario>>() {
+                                @Override
+                                public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
+                                    usuarios.clear();
+                                    if (response.isSuccessful()) {
+                                        assert response.body() != null;
+                                        usuarios.addAll(response.body());
 
-                            sUsuarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, nombreUsuarios));
-                            sUsuarios.setSelection(0);
+                                        nombreUsuarios = new String[usuarios.size()];
+
+                                        for (int i = 0; i < nombreUsuarios.length; i++) {
+                                            nombreUsuarios[i] = usuarios.get(i).getNombreUsuario();
+                                        }
+
+                                        sUsuarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, nombreUsuarios));
+                                        sUsuarios.setSelection(0);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Usuario>> call, Throwable t) {
+                                    Toast.makeText(getContext(), "No se han podido obtener los usuarios", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } else {
                             Toast.makeText(getContext(), "Error al eliminar el usuario", Toast.LENGTH_SHORT).show();
                         }
@@ -121,23 +140,16 @@ public class FragmentEliminarUsuario extends Fragment implements SpinnerAdapter 
                 });
             }
         });
-    }
 
-    private void recargarUsuarios() {
-        apiService.getUsuarios().enqueue(new Callback<List<Usuario>>() {
+        btnVolver.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<List<Usuario>> call, Response<List<Usuario>> response) {
-                usuarios.clear();
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    usuarios.addAll(response.body());
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Usuario>> call, Throwable t) {
-                Toast.makeText(getContext(), "No se han podido obtener los usuarios", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                FragmentManager manager = getParentFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentAdmin.class, null)
+                        .commit();
             }
         });
     }
