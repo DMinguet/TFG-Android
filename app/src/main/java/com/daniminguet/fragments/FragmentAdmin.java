@@ -45,6 +45,7 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
         Button btnAnyadirPreguntas = view.findViewById(R.id.btnAnyadirPreguntaAdmin);
         Button btnModificarPreguntas = view.findViewById(R.id.btnModificarPreguntaAdmin);
         Button btnEliminarPreguntas = view.findViewById(R.id.btnEliminarPreguntaAdmin);
+        Button btnRelaciones = view.findViewById(R.id.btnRelacionarAdmin);
         Button btnVolver = view.findViewById(R.id.btnVolverAdmin);
 
         btnAnyadirUsuario.setOnClickListener(this);
@@ -59,6 +60,7 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
         btnAnyadirPreguntas.setOnClickListener(this);
         btnModificarPreguntas.setOnClickListener(this);
         btnEliminarPreguntas.setOnClickListener(this);
+        btnRelaciones.setOnClickListener(this);
         btnVolver.setOnClickListener(this);
     }
 
@@ -153,6 +155,13 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
                         .replace(R.id.frgPrincipal, FragmentEliminarPregunta.class, null)
+                        .commit();
+                break;
+            case R.id.btnRelacionarAdmin:
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, FragmentRelacionesExamenPreguntas.class, null)
                         .commit();
                 break;
             case R.id.btnVolverAdmin:

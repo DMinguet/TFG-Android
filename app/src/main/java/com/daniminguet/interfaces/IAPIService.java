@@ -2,6 +2,7 @@ package com.daniminguet.interfaces;
 
 import com.daniminguet.models.Examen;
 import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.PreguntasExam;
 import com.daniminguet.models.Temario;
 import com.daniminguet.models.Usuario;
 
@@ -87,4 +88,13 @@ public interface IAPIService {
     Call<Usuario> logUsuario (
             @Body Usuario usuario
     );
+
+    @GET("preguntaExamen/all")
+    Call<List<PreguntasExam>> getPreguntasExamen();
+
+    @GET("preguntaExamen/{id}")
+    Call<PreguntasExam> getPreguntaExamen(@Path("id") int id);
+
+    @POST("preguntaExamen/add")
+    Call<Boolean> addPreguntasExamen(@Body PreguntasExam preguntas);
 }

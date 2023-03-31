@@ -91,7 +91,9 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
                     return;
                 }
 
-                Preguntas nuevaPregunta = new Preguntas(temarioSeleccionado.getId(), titulo, respuesta);
+                Preguntas nuevaPregunta = new Preguntas(titulo, respuesta, temarioSeleccionado.getId());
+
+                System.out.println(nuevaPregunta.toString());
 
                 apiService.addPregunta(nuevaPregunta).enqueue(new Callback<Boolean>() {
                     @Override

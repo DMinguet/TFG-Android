@@ -129,7 +129,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                             String temarioSeleccionado = sPreguntas.getSelectedItem().toString();
                                             Temario temarioCorrespondiente = obtenerTemario(temarioSeleccionado);
 
-                                            preguntaCorrespondiente.setTemario(temarioCorrespondiente.getId());
+                                            preguntaCorrespondiente.setFkTemario(temarioCorrespondiente.getId());
 
                                             modificarPregunta(preguntaCorrespondiente);
                                             break;

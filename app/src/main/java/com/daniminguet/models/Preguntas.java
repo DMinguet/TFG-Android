@@ -3,30 +3,21 @@ package com.daniminguet.models;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Preguntas implements Serializable {
     private int id;
-    private int temario;
     private String pregunta;
     private Respuesta respuesta;
+    private int fkTemario;
 
-    public Preguntas(int temario, String pregunta, Respuesta respuesta) {
-        this.temario = temario;
+    public Preguntas(String pregunta, Respuesta respuesta, int fkTemario) {
         this.pregunta = pregunta;
         this.respuesta = respuesta;
+        this.fkTemario = fkTemario;
     }
 
     public int getId() {
         return id;
-    }
-
-    public int getTemario() {
-        return temario;
-    }
-
-    public void setTemario(int temario) {
-        this.temario = temario;
     }
 
     public String getPregunta() {
@@ -45,6 +36,14 @@ public class Preguntas implements Serializable {
         this.respuesta = respuesta;
     }
 
+    public int getFkTemario() {
+        return fkTemario;
+    }
+
+    public void setFkTemario(int fkTemario) {
+        this.fkTemario = fkTemario;
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         return super.equals(obj);
@@ -59,9 +58,9 @@ public class Preguntas implements Serializable {
     public String toString() {
         return "Preguntas{" +
                 "id=" + id +
-                ", temario=" + temario +
                 ", pregunta='" + pregunta + '\'' +
                 ", respuesta=" + respuesta +
+                ", temario=" + fkTemario +
                 '}';
     }
 }
