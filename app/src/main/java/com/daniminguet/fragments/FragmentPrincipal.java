@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.daniminguet.R;
+import com.daniminguet.fragments.examenes.FragmentExamenes;
+import com.daniminguet.fragments.temarios.FragmentTemarios;
 import com.daniminguet.models.Usuario;
 
 public class FragmentPrincipal extends Fragment {

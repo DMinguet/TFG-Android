@@ -1,46 +1,30 @@
 package com.daniminguet;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import com.daniminguet.fragments.FragmentPerfil;
 import com.daniminguet.fragments.FragmentPrincipal;
 import com.daniminguet.interfaces.IAPIService;
+import com.daniminguet.interfaces.IExamenListener;
 import com.daniminguet.interfaces.ITemarioListener;
+import com.daniminguet.models.Examen;
 import com.daniminguet.models.Temario;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
-
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener, FragmentPerfil.IOnAttachListener, ITemarioListener {
+public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener, FragmentPerfil.IOnAttachListener, ITemarioListener, IExamenListener {
 
     private IAPIService apiService;
     private Usuario usuarioActivo;
@@ -123,7 +107,22 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
 
             @Override
             public void onFailure(Call<Temario> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "No existe una aplicación para abrir el PDF", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Error al abrir el enlace del temario", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onExamenSeleccionado(int id) {
+        apiService.getExamen(id).enqueue(new Callback<Examen>() {
+            @Override
+            public void onResponse(Call<Examen> call, Response<Examen> response) {
+                startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", response.body()));
+            }
+
+            @Override
+            public void onFailure(Call<Examen> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "Error al iniciar el examen", Toast.LENGTH_SHORT).show();
             }
         });
     }

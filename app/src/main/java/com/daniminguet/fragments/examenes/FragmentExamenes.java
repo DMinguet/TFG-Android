@@ -1,4 +1,4 @@
-package com.daniminguet.fragments;
+package com.daniminguet.fragments.examenes;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.R;
+import com.daniminguet.adaptadores.AdaptadorExamenes;
 import com.daniminguet.adaptadores.AdaptadorTemarios;
-import com.daniminguet.interfaces.ITemarioListener;
+import com.daniminguet.interfaces.IAPIService;
+import com.daniminguet.interfaces.IExamenListener;
+import com.daniminguet.models.Examen;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
 
@@ -24,10 +26,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentTemarios extends Fragment {
-    private ITemarioListener listener;
+public class FragmentExamenes extends Fragment {
+    private IExamenListener listener;
 
-    public FragmentTemarios() {
+    public FragmentExamenes() {
         super(R.layout.lista);
     }
 
@@ -37,22 +39,22 @@ public class FragmentTemarios extends Fragment {
         IAPIService apiService = RestClient.getInstance();
         RecyclerView rvLista = view.findViewById(R.id.rvLista);
 
-        apiService.getTemarios().enqueue(new Callback<List<Temario>>() {
+        apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
             @Override
-            public void onResponse(@NonNull Call<List<Temario>> call, @NonNull Response<List<Temario>> response) {
+            public void onResponse(@NonNull Call<List<Examen>> call, @NonNull Response<List<Examen>> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
 
-                    AdaptadorTemarios adaptadorTemarios = new AdaptadorTemarios(response.body(), listener);
+                    AdaptadorExamenes adaptadorExamenes = new AdaptadorExamenes(response.body(), listener);
                     rvLista.setHasFixedSize(true);
-                    rvLista.setAdapter(adaptadorTemarios);
+                    rvLista.setAdapter(adaptadorExamenes);
                     rvLista.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<Temario>> call, @NonNull Throwable t) {
-                Toast.makeText(getActivity().getApplicationContext(), "No se han podido obtener los temarios", Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<List<Examen>> call, @NonNull Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "No se han podido obtener los exámenes", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -60,6 +62,6 @@ public class FragmentTemarios extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        listener = (ITemarioListener) context;
+        listener = (IExamenListener) context;
     }
 }
