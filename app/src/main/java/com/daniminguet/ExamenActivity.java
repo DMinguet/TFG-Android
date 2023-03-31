@@ -53,7 +53,9 @@ public class ExamenActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
                     for (Preguntas pregunta : response.body()) {
-                        if (pregunta.getFkTemario())
+                        if (pregunta.getFkTemario() == 1) {
+                            System.out.println("HOLA");
+                        }
                     }
 
                     AdaptadorPreguntas adaptadorPreguntas = new AdaptadorPreguntas(response.body());
