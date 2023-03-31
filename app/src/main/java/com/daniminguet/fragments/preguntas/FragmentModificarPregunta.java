@@ -20,7 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import com.daniminguet.R;
 import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
-import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.Respuesta;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 public class FragmentModificarPregunta extends Fragment implements SpinnerAdapter {
     private String[] preguntasString;
-    private List<Preguntas> preguntas;
+    private List<Pregunta> preguntas;
     private IAPIService apiService;
     private List<Temario> temarios;
 
@@ -58,9 +58,9 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         Button btnVolver = view.findViewById(R.id.btnVolverModificarPregunta);
         etNuevoValor.setVisibility(View.INVISIBLE);
 
-        apiService.getPreguntas().enqueue(new Callback<List<Preguntas>>() {
+        apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
             @Override
-            public void onResponse(Call<List<Preguntas>> call, Response<List<Preguntas>> response) {
+            public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     preguntas.addAll(response.body());
@@ -122,14 +122,14 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                     String preguntaSeleccionada = sPreguntas.getSelectedItem().toString();
                                     String campoSeleccionado = sCampos.getSelectedItem().toString();
 
-                                    Preguntas preguntaCorrespondiente = obtenerPregunta(preguntaSeleccionada);
+                                    Pregunta preguntaCorrespondiente = obtenerPregunta(preguntaSeleccionada);
 
                                     switch (campoSeleccionado) {
                                         case "Temario":
                                             String temarioSeleccionado = sPreguntas.getSelectedItem().toString();
                                             Temario temarioCorrespondiente = obtenerTemario(temarioSeleccionado);
 
-                                            preguntaCorrespondiente.setFkTemario(temarioCorrespondiente.getId());
+                                            preguntaCorrespondiente.setTemario(temarioCorrespondiente);
 
                                             modificarPregunta(preguntaCorrespondiente);
                                             break;
@@ -151,7 +151,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                         case "Respuesta":
                                             Respuesta respuesta = (Respuesta) sNuevoValor.getSelectedItem();
 
-                                            preguntaCorrespondiente.setRespuesta(respuesta);
+                                            preguntaCorrespondiente.setRespuesta(String.valueOf(respuesta));
 
                                             modificarPregunta(preguntaCorrespondiente);
                                             break;
@@ -169,7 +169,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
             }
 
             @Override
-            public void onFailure(Call<List<Preguntas>> call, Throwable t) {
+            public void onFailure(Call<List<Pregunta>> call, Throwable t) {
                 Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
             }
         });
@@ -187,7 +187,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         });
     }
 
-    private void modificarPregunta(Preguntas pregunta) {
+    private void modificarPregunta(Pregunta pregunta) {
         apiService.updatePregunta(pregunta).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -205,8 +205,8 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         });
     }
 
-    private Preguntas obtenerPregunta(String pregunta) {
-        for (Preguntas preguntaCorrespondiente : preguntas) {
+    private Pregunta obtenerPregunta(String pregunta) {
+        for (Pregunta preguntaCorrespondiente : preguntas) {
             if (pregunta.equals(preguntaCorrespondiente.getPregunta())) {
                 return preguntaCorrespondiente;
             }

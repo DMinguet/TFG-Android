@@ -1,6 +1,5 @@
 package com.daniminguet.models;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.Serializable;
@@ -11,6 +10,7 @@ public class Temario implements Serializable {
     private int tema;
     private String titulo;
     private String pdf;
+    private List<Pregunta> preguntas;
 
     public Temario(int tema, String titulo, String pdf) {
         this.tema = tema;
@@ -26,7 +26,7 @@ public class Temario implements Serializable {
         return tema;
     }
 
-    public void setTema(Integer tema) {
+    public void setTema(int tema) {
         this.tema = tema;
     }
 
@@ -44,6 +44,14 @@ public class Temario implements Serializable {
 
     public void setPdf(String pdf) {
         this.pdf = pdf;
+    }
+
+    public List<Pregunta> getPreguntas() {
+        return preguntas;
+    }
+
+    public void setPreguntas(List<Pregunta> preguntas) {
+        this.preguntas = preguntas;
     }
 
     @Override

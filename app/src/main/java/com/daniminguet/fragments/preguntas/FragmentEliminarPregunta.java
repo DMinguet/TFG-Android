@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import com.daniminguet.R;
 import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
-import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.Pregunta;
 import com.daniminguet.rest.RestClient;
 
 import java.util.ArrayList;
@@ -31,8 +31,8 @@ import retrofit2.Response;
 
 public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter {
     private String[] preguntasString;
-    private List<Preguntas> preguntas;
-    private Preguntas preguntaSeleccionada;
+    private List<Pregunta> preguntas;
+    private Pregunta preguntaSeleccionada;
     private IAPIService apiService;
 
     public FragmentEliminarPregunta() {
@@ -49,9 +49,9 @@ public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter
         Button btnEliminar = view.findViewById(R.id.btnEliminarPregunta);
         Button btnVolver = view.findViewById(R.id.btnVolverEliminarPregunta);
 
-        apiService.getPreguntas().enqueue(new Callback<List<Preguntas>>() {
+        apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
             @Override
-            public void onResponse(Call<List<Preguntas>> call, Response<List<Preguntas>> response) {
+            public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     preguntas.addAll(response.body());
@@ -68,7 +68,7 @@ public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter
             }
 
             @Override
-            public void onFailure(Call<List<Preguntas>> call, Throwable t) {
+            public void onFailure(Call<List<Pregunta>> call, Throwable t) {
                 Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
             }
         });
@@ -94,9 +94,9 @@ public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter
                         if(Boolean.TRUE.equals(response.body())) {
                             Toast.makeText(getContext(), "Pregunta eliminada", Toast.LENGTH_SHORT).show();
 
-                            apiService.getPreguntas().enqueue(new Callback<List<Preguntas>>() {
+                            apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
                                 @Override
-                                public void onResponse(Call<List<Preguntas>> call, Response<List<Preguntas>> response) {
+                                public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
                                     preguntas.clear();
                                     if (response.isSuccessful()) {
                                         assert response.body() != null;
@@ -114,7 +114,7 @@ public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter
                                 }
 
                                 @Override
-                                public void onFailure(Call<List<Preguntas>> call, Throwable t) {
+                                public void onFailure(Call<List<Pregunta>> call, Throwable t) {
                                     Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -144,8 +144,8 @@ public class FragmentEliminarPregunta extends Fragment implements SpinnerAdapter
         });
     }
 
-    private Preguntas obtenerPregunta(String pregunta) {
-        for (Preguntas preguntaCorrespondiente : preguntas) {
+    private Pregunta obtenerPregunta(String pregunta) {
+        for (Pregunta preguntaCorrespondiente : preguntas) {
             if (preguntaCorrespondiente.getPregunta().equals(pregunta)) {
                 return preguntaCorrespondiente;
             }

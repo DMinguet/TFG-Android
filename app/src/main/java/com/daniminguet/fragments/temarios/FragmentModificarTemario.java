@@ -107,7 +107,7 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
                                         return;
                                     }
 
-                                    temarioCorrespondiente.setTema(Integer.valueOf(nuevoValor));
+                                    temarioCorrespondiente.setTema(Integer.parseInt(nuevoValor));
 
                                     modificarTemario(temarioCorrespondiente);
                                     etNuevoValor.setText("");

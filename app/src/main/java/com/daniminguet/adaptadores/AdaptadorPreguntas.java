@@ -9,16 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daniminguet.R;
-import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.Pregunta;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.List;
 
 public class AdaptadorPreguntas extends RecyclerView.Adapter<AdaptadorPreguntas.ViewHolder> {
-    private final List<Preguntas> preguntas;
+    private final List<Pregunta> preguntas;
 
-    public AdaptadorPreguntas(List<Preguntas> preguntas) {
+    public AdaptadorPreguntas(List<Pregunta> preguntas) {
         this.preguntas = preguntas;
     }
 
@@ -31,7 +31,7 @@ public class AdaptadorPreguntas extends RecyclerView.Adapter<AdaptadorPreguntas.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Preguntas pregunta = preguntas.get(position);
+        Pregunta pregunta = preguntas.get(position);
 
         holder.bindPregunta(pregunta);
     }
@@ -56,7 +56,7 @@ public class AdaptadorPreguntas extends RecyclerView.Adapter<AdaptadorPreguntas.
             this.cD = itemView.findViewById(R.id.cD);
         }
 
-        public void bindPregunta(Preguntas pregunta) {
+        public void bindPregunta(Pregunta pregunta) {
             tvPregunta.setText(pregunta.getPregunta());
         }
     }

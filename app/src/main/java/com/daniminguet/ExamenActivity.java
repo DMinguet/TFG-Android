@@ -10,12 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.daniminguet.adaptadores.AdaptadorExamenes;
 import com.daniminguet.adaptadores.AdaptadorPreguntas;
-import com.daniminguet.adaptadores.AdaptadorTemarios;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Examen;
-import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
 
@@ -30,7 +28,7 @@ public class ExamenActivity extends AppCompatActivity {
     private IAPIService apiService;
     private Usuario usuarioActivo;
     private Examen examenSeleccionado;
-    private List<Preguntas> preguntas;
+    private List<Pregunta> preguntas;
     private boolean examenAcabado;
 
     @Override
@@ -47,13 +45,13 @@ public class ExamenActivity extends AppCompatActivity {
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) RecyclerView rvLista = findViewById(R.id.rvPreguntas);
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) Button btnAcabarExamen = findViewById(R.id.btnAcabarExamen);
 
-        apiService.getPreguntas().enqueue(new Callback<List<Preguntas>>() {
+        apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
             @Override
-            public void onResponse(Call<List<Preguntas>> call, Response<List<Preguntas>> response) {
+            public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    for (Preguntas pregunta : response.body()) {
-                        if (pregunta.getFkTemario() == 1) {
+                    for (Pregunta pregunta : response.body()) {
+                        if (pregunta.getTemario().getId() == 1) {
                             System.out.println("HOLA");
                         }
                     }
@@ -66,7 +64,7 @@ public class ExamenActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Preguntas>> call, Throwable t) {
+            public void onFailure(Call<List<Pregunta>> call, Throwable t) {
                 Toast.makeText(ExamenActivity.this, "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
             }
         });

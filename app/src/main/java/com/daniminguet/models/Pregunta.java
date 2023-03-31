@@ -4,16 +4,18 @@ import androidx.annotation.Nullable;
 
 import java.io.Serializable;
 
-public class Preguntas implements Serializable {
+public class Pregunta implements Serializable {
     private int id;
     private String pregunta;
-    private Respuesta respuesta;
-    private int fkTemario;
+    private String respuesta;
+    private Temario temario;
+    private Examen examen;
 
-    public Preguntas(String pregunta, Respuesta respuesta, int fkTemario) {
+    public Pregunta(String pregunta, String respuesta, Temario temario, Examen examen) {
         this.pregunta = pregunta;
         this.respuesta = respuesta;
-        this.fkTemario = fkTemario;
+        this.temario = temario;
+        this.examen = examen;
     }
 
     public int getId() {
@@ -28,20 +30,28 @@ public class Preguntas implements Serializable {
         this.pregunta = pregunta;
     }
 
-    public Respuesta getRespuesta() {
+    public String getRespuesta() {
         return respuesta;
     }
 
-    public void setRespuesta(Respuesta respuesta) {
+    public void setRespuesta(String respuesta) {
         this.respuesta = respuesta;
     }
 
-    public int getFkTemario() {
-        return fkTemario;
+    public Temario getTemario() {
+        return temario;
     }
 
-    public void setFkTemario(int fkTemario) {
-        this.fkTemario = fkTemario;
+    public void setTemario(Temario temario) {
+        this.temario = temario;
+    }
+
+    public Examen getExamen() {
+        return examen;
+    }
+
+    public void setExamen(Examen examen) {
+        this.examen = examen;
     }
 
     @Override
@@ -60,7 +70,7 @@ public class Preguntas implements Serializable {
                 "id=" + id +
                 ", pregunta='" + pregunta + '\'' +
                 ", respuesta=" + respuesta +
-                ", temario=" + fkTemario +
+                ", temario=" + temario +
                 '}';
     }
 }

@@ -19,7 +19,8 @@ import androidx.fragment.app.FragmentManager;
 import com.daniminguet.R;
 import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
-import com.daniminguet.models.Preguntas;
+import com.daniminguet.models.Examen;
+import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.Respuesta;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
@@ -36,6 +37,9 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
     private String[] titulosTemarios;
     private List<Temario> temarios;
     private Temario temarioSeleccionado;
+    private String[] titulosExamenes;
+    private List<Examen> examenes;
+    private Examen examenSeleccionado;
 
     public FragmentAnyadirPregunta() {
         super(R.layout.anyadir_pregunta);
@@ -46,8 +50,10 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
         super.onViewCreated(view, savedInstanceState);
         apiService = RestClient.getInstance();
         temarios = new ArrayList<>();
+        examenes = new ArrayList<>();
 
         Spinner sTemarios = view.findViewById(R.id.sTemariosAnyadirPregunta);
+        Spinner sExamenes = view.findViewById(R.id.sExamenesAnyadirPregunta);
         EditText etPregunta = view.findViewById(R.id.etPregunta);
         Spinner sRespuestas = view.findViewById(R.id.sPosiblesRespuestas);
         Button btnAnyadir = view.findViewById(R.id.btnAnyadirPregunta);
@@ -76,6 +82,29 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
             }
         });
 
+        apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
+            @Override
+            public void onResponse(Call<List<Examen>> call, Response<List<Examen>> response) {
+                assert response.body() != null;
+                examenes.addAll(response.body());
+
+                titulosExamenes = new String[examenes.size()];
+
+                for (int i = 0; i < titulosExamenes.length; i++) {
+                    titulosExamenes[i] = examenes.get(i).getTitulo();
+                }
+
+                sExamenes.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosExamenes));
+
+                examenSeleccionado = obtenerExamen(sExamenes.getSelectedItem().toString());
+            }
+
+            @Override
+            public void onFailure(Call<List<Examen>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error al obtener los exámenes", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         sRespuestas.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, Respuesta.values()));
 
         btnAnyadir.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +120,7 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
                     return;
                 }
 
-                Preguntas nuevaPregunta = new Preguntas(titulo, respuesta, temarioSeleccionado.getId());
+                Pregunta nuevaPregunta = new Pregunta(titulo, String.valueOf(respuesta), temarioSeleccionado, examenSeleccionado);
 
                 System.out.println(nuevaPregunta.toString());
 
@@ -134,6 +163,15 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
         for (Temario temario : temarios) {
             if (temario.getTitulo().equals(tituloTemario)) {
                 return temario;
+            }
+        }
+        return null;
+    }
+
+    private Examen obtenerExamen(String tituloExamen) {
+        for (Examen examen : examenes) {
+            if (examen.getTitulo().equals(tituloExamen)) {
+                return examen;
             }
         }
         return null;

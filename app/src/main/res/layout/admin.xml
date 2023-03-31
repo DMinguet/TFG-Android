@@ -187,23 +187,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <Button
-        android:id="@+id/btnRelacionarAdmin"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="AÑADIR RELACIÓN EXAMEN-PREGUNTA"
-        app:layout_constraintEnd_toEndOf="@+id/btnEliminarPreguntaAdmin"
-        app:layout_constraintStart_toStartOf="@+id/btnAnyadirPreguntaAdmin"
-        app:layout_constraintTop_toBottomOf="@+id/btnModificarPreguntaAdmin" />
-
-    <Button
         android:id="@+id/btnVolverAdmin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="70dp"
         android:text="VOLVER AL INICIO"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRelacionarAdmin" />
+        app:layout_constraintTop_toBottomOf="@+id/btnModificarPreguntaAdmin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

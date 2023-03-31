@@ -8,6 +8,12 @@ import java.util.List;
 public class Examen implements Serializable {
     private int id;
     private String titulo;
+    private List<Pregunta> preguntas;
+    private List<Usuario> usuarios;
+
+    public Examen(int id) {
+        this.id = id;
+    }
 
     public Examen(String titulo) {
         this.titulo = titulo;
@@ -23,6 +29,22 @@ public class Examen implements Serializable {
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
+    }
+
+    public List<Pregunta> getPreguntas() {
+        return preguntas;
+    }
+
+    public void setPreguntas(List<Pregunta> preguntas) {
+        this.preguntas = preguntas;
+    }
+
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
     }
 
     @Override
