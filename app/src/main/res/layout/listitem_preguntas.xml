@@ -6,15 +6,39 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tvPregunta"
+        android:id="@+id/tvNumPregunta"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
-        android:text="TextView"
+        android:layout_marginBottom="10dp"
+        android:text="Número de la pregunta"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvPregunta"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="Pregunta con sus posibles respuestas"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView44"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="Selecciona una opción:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
 

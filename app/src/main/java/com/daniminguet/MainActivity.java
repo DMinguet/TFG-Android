@@ -10,21 +10,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.daniminguet.fragments.FragmentNotas;
 import com.daniminguet.fragments.FragmentPerfil;
 import com.daniminguet.fragments.FragmentPrincipal;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.interfaces.IExamenListener;
 import com.daniminguet.interfaces.ITemarioListener;
 import com.daniminguet.models.Examen;
+import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.Temario;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener, FragmentPerfil.IOnAttachListener, ITemarioListener, IExamenListener {
+public class MainActivity extends AppCompatActivity implements FragmentPrincipal.IOnAttachListener, FragmentPerfil.IOnAttachListener, ITemarioListener, IExamenListener,
+        FragmentNotas.IOnAttachListener {
 
     private IAPIService apiService;
     private Usuario usuarioActivo;
@@ -117,7 +124,29 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
         apiService.getExamen(id).enqueue(new Callback<Examen>() {
             @Override
             public void onResponse(Call<Examen> call, Response<Examen> response) {
-                startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", response.body()));
+                Toast.makeText(MainActivity.this, "Solo tendrás 1 oportunidad. ¡Aprovéchala!", Toast.LENGTH_SHORT).show();
+                Examen examen = response.body();
+
+                apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
+                    @Override
+                    public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
+                        List<Pregunta> preguntasExamen = new ArrayList<>();
+
+                        assert response.body() != null;
+                        for (Pregunta pregunta : response.body()) {
+                            if (pregunta.getExamen().getId() == examen.getId()) {
+                                preguntasExamen.add(pregunta);
+                            }
+                        }
+
+                        startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", examen).putExtra("preguntas", (Serializable) preguntasExamen));
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Pregunta>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -125,5 +154,10 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
                 Toast.makeText(MainActivity.this, "Error al iniciar el examen", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public Usuario getUsuarioActivoNotas() {
+        return usuarioActivo;
     }
 }

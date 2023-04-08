@@ -5,27 +5,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPreguntas"
-        android:layout_width="match_parent"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/frgPreguntas"
+        android:name="com.daniminguet.fragments.examenes.FragmentHacerExamen"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAcabarExamen"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvInfo1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout="@layout/listitem_preguntas" />
 
     <Button
-        android:id="@+id/btnAcabarExamen"
+        android:id="@+id/btnSiguiente"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="ACABAR EXAMEN"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvPreguntas" />
+        android:layout_marginTop="50dp"
+        android:text="SIGUIENTE PREGUNTA"
+        app:layout_constraintEnd_toEndOf="@+id/frgPreguntas"
+        app:layout_constraintHorizontal_bias="0.441"
+        app:layout_constraintStart_toStartOf="@+id/frgPreguntas"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfo2" />
+
+    <TextView
+        android:id="@+id/tvInfo1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="10dp"
+        android:text="UNA VEZ VAYAS A LA SIGUIENTE PREGUNTA NO PODRÁS MODIFICAR LA ANTERIOR"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/frgPreguntas"
+        app:layout_constraintStart_toStartOf="@+id/frgPreguntas"
+        app:layout_constraintTop_toBottomOf="@+id/frgPreguntas" />
+
+    <TextView
+        android:id="@+id/tvInfo2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="UNA PREGUNTA MAL RESTARÁ 0,25 DE LA NOTA, HAY UN TOTAL DE 10 PREGUNTAS"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tvInfo1"
+        app:layout_constraintStart_toStartOf="@+id/tvInfo1"
+        app:layout_constraintTop_toBottomOf="@+id/tvInfo1" />
+
+    <Button
+        android:id="@+id/btnEmpezar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="EMPEZAR EXAMEN"
+        app:layout_constraintEnd_toEndOf="@+id/btnSiguiente"
+        app:layout_constraintStart_toStartOf="@+id/btnSiguiente"
+        app:layout_constraintTop_toBottomOf="@+id/btnSiguiente" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,7 +59,7 @@ public class AdaptadorExamenes extends RecyclerView.Adapter<AdaptadorExamenes.Vi
         @Override
         public void onClick(View v) {
             if (examenListener != null) {
-                examenListener.onExamenSeleccionado(getAdapterPosition());
+                examenListener.onExamenSeleccionado(getAdapterPosition() + 1);
             }
         }
     }

@@ -69,7 +69,7 @@ public class FragmentPrincipal extends Fragment {
                 manager.beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .replace(R.id.frgPrincipal, FragmentExamenes.class, null)
+                        .replace(R.id.frgPrincipal, FragmentNotas.class, null)
                         .commit();
             }
         });
