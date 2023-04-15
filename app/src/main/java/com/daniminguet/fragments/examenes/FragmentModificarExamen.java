@@ -81,7 +81,46 @@ public class FragmentModificarExamen extends Fragment implements SpinnerAdapter 
 
                             examenCorrespondiente.setTitulo(nuevoValor);
 
-                            modificarExamen(examenCorrespondiente);
+                            apiService.updateExamen(examenCorrespondiente).enqueue(new Callback<Boolean>() {
+                                @Override
+                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                    if(response.body()) {
+                                        Toast.makeText(getContext(), "Examen modificado correctamente", Toast.LENGTH_SHORT).show();
+
+                                        apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Examen>> call, Response<List<Examen>> response) {
+                                                examenes.clear();
+                                                if (response.isSuccessful()) {
+                                                    assert response.body() != null;
+                                                    examenes.addAll(response.body());
+
+                                                    titulosExamen = new String[examenes.size()];
+                                                    for (int i = 0; i < titulosExamen.length; i++) {
+                                                        titulosExamen[i] = examenes.get(i).getTitulo();
+                                                    }
+
+                                                    sExamenes.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosExamen));
+                                                    sExamenes.setSelection(0);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<Examen>> call, Throwable t) {
+
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getContext(), "Error al modificar el examen", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Boolean> call, Throwable t) {
+                                    Toast.makeText(getContext(), "No se ha podido modificar el examen", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             etNuevoValor.setText("");
                         }
                     });
@@ -103,24 +142,6 @@ public class FragmentModificarExamen extends Fragment implements SpinnerAdapter 
                         .addToBackStack(null)
                         .replace(R.id.frgPrincipal, FragmentAdmin.class, null)
                         .commit();
-            }
-        });
-    }
-
-    private void modificarExamen(Examen examen) {
-        apiService.updateExamen(examen).enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body()) {
-                    Toast.makeText(getContext(), "Examen modificado correctamente", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Error al modificar el examen", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                Toast.makeText(getContext(), "No se ha podido modificar el examen", Toast.LENGTH_SHORT).show();
             }
         });
     }

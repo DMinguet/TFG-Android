@@ -112,14 +112,19 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                         }
                     }
 
-                    UsuarioHasExamen resultadoExamen = new UsuarioHasExamen(usuarioActivo.getId(), examenSeleccionado.getId(), nota, fechaExamen);
+                    UsuarioHasExamen resultadoExamen = new UsuarioHasExamen(usuarioActivo, examenSeleccionado, nota, fechaExamen);
                     apiService.addExamenUsuario(resultadoExamen).enqueue(new Callback<Boolean>() {
                         @Override
                         public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                             if (Boolean.TRUE.equals(response.body())) {
-                                Toast.makeText(ExamenActivity.this, "Podrás ver el resultado en el apartado de las notas", Toast.LENGTH_SHORT).show();
+                                if (nota >= 5) {
+                                    Toast.makeText(ExamenActivity.this, "Enhorabuena, has sacado un " + nota, Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(ExamenActivity.this, "Debes esforzarte, has sacado un " + nota, Toast.LENGTH_LONG).show();
+                                }
+                                Toast.makeText(ExamenActivity.this, "Podrás ver el resultado también en el apartado de las notas", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(ExamenActivity.this, "Solo puedes hacer el examen una vez", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ExamenActivity.this, "Solo puedes hacer el examen una vez, nota obtenida: " + nota, Toast.LENGTH_SHORT).show();
                             }
                         }
 

@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentManager;
 import com.daniminguet.R;
 import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
+import com.daniminguet.models.Examen;
 import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.Respuesta;
 import com.daniminguet.models.Temario;
@@ -34,9 +35,11 @@ import retrofit2.Response;
 
 public class FragmentModificarPregunta extends Fragment implements SpinnerAdapter {
     private String[] preguntasString;
+    private String[] titulosExamen;
     private List<Pregunta> preguntas;
     private IAPIService apiService;
     private List<Temario> temarios;
+    private List<Examen> examenes;
 
     public FragmentModificarPregunta() {
         super(R.layout.modificar_pregunta);
@@ -49,6 +52,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         apiService = RestClient.getInstance();
         preguntas = new ArrayList<>();
         temarios = new ArrayList<>();
+        examenes = new ArrayList<>();
 
         Spinner sPreguntas = view.findViewById(R.id.sPreguntasModificar);
         Spinner sCampos = view.findViewById(R.id.sCamposPregunta);
@@ -65,7 +69,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                     assert response.body() != null;
                     preguntas.addAll(response.body());
                     preguntasString = new String[preguntas.size()];
-                    String[] campos = {"Temario", "Pregunta", "Respuesta"};
+                    String[] campos = {"Temario", "Examen", "Pregunta", "Respuesta"};
 
                     for (int i = 0; i < preguntasString.length; i++) {
                         preguntasString[i] = preguntas.get(i).getPregunta();
@@ -87,6 +91,24 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                             sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemario));
 
+                            apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
+                                @Override
+                                public void onResponse(Call<List<Examen>> call, Response<List<Examen>> response) {
+                                    assert response.body() != null;
+                                    examenes.addAll(response.body());
+                                    titulosExamen = new String[examenes.size()];
+
+                                    for (int i = 0; i < titulosExamen.length; i++) {
+                                        titulosExamen[i] = examenes.get(i).getTitulo();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Examen>> call, Throwable t) {
+                                    Toast.makeText(getContext(), "No se han podido obtener los examenes", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                             sCampos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -96,6 +118,11 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                         case "Temario":
                                             sNuevoValor.setVisibility(View.VISIBLE);
                                             sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemario));
+                                            etNuevoValor.setVisibility(View.INVISIBLE);
+                                            break;
+                                        case "Examen":
+                                            sNuevoValor.setVisibility(View.VISIBLE);
+                                            sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosExamen));
                                             etNuevoValor.setVisibility(View.INVISIBLE);
                                             break;
                                         case "Pregunta":
@@ -131,7 +158,13 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                                             preguntaCorrespondiente.setTemario(temarioCorrespondiente);
 
-                                            modificarPregunta(preguntaCorrespondiente);
+                                            break;
+                                        case "Examen":
+                                            String examenSeleccionado = sPreguntas.getSelectedItem().toString();
+                                            Examen examenCorrespondiente = obtenerExamen(examenSeleccionado);
+
+                                            preguntaCorrespondiente.setExamen(examenCorrespondiente);
+
                                             break;
                                         case "Pregunta":
                                             String nuevoValor = etNuevoValor.getText().toString();
@@ -144,7 +177,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                                             preguntaCorrespondiente.setPregunta(nuevoValor);
 
-                                            modificarPregunta(preguntaCorrespondiente);
                                             etNuevoValor.setText("");
 
                                             break;
@@ -153,9 +185,49 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                                             preguntaCorrespondiente.setRespuesta(String.valueOf(respuesta));
 
-                                            modificarPregunta(preguntaCorrespondiente);
                                             break;
                                     }
+
+                                    apiService.updatePregunta(preguntaCorrespondiente).enqueue(new Callback<Boolean>() {
+                                        @Override
+                                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                            if(response.body()) {
+                                                Toast.makeText(getContext(), "Pregunta modificada correctamente", Toast.LENGTH_SHORT).show();
+
+                                                apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
+                                                    @Override
+                                                    public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
+                                                        preguntas.clear();
+                                                        if (response.isSuccessful()) {
+                                                            assert response.body() != null;
+                                                            preguntas.addAll(response.body());
+
+                                                            preguntasString = new String[preguntas.size()];
+
+                                                            for (int i = 0; i < preguntasString.length; i++) {
+                                                                preguntasString[i] = preguntas.get(i).getPregunta();
+                                                            }
+
+                                                            sPreguntas.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, preguntasString));
+                                                            sPreguntas.setSelection(0);
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<List<Pregunta>> call, Throwable t) {
+                                                        Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                            } else {
+                                                Toast.makeText(getContext(), "Error al modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<Boolean> call, Throwable t) {
+                                            Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -187,24 +259,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         });
     }
 
-    private void modificarPregunta(Pregunta pregunta) {
-        apiService.updatePregunta(pregunta).enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body()) {
-                    Toast.makeText(getContext(), "Pregunta modificada correctamente", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Error al modificar la pregunta", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private Pregunta obtenerPregunta(String pregunta) {
         for (Pregunta preguntaCorrespondiente : preguntas) {
             if (pregunta.equals(preguntaCorrespondiente.getPregunta())) {
@@ -219,6 +273,15 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         for (Temario temario : temarios) {
             if (temario.getTitulo().equals(tituloTemario)) {
                 return temario;
+            }
+        }
+        return null;
+    }
+
+    private Examen obtenerExamen(String tituloExamen) {
+        for (Examen examen : examenes) {
+            if (examen.getTitulo().equals(tituloExamen)) {
+                return examen;
             }
         }
         return null;

@@ -31,7 +31,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FragmentModificarTemario extends Fragment implements SpinnerAdapter {
-    private String[] tituloTemarios;
+    private String[] titulosTemarios;
     private List<Temario> temarios;
     private IAPIService apiService;
 
@@ -58,14 +58,14 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
                 if (response.isSuccessful()) {
                     assert response.body() != null;
                     temarios.addAll(response.body());
-                    tituloTemarios = new String[temarios.size()];
+                    titulosTemarios = new String[temarios.size()];
                     String[] campos = {"Tema", "Titulo", "URL PDF"};
 
-                    for (int i = 0; i < tituloTemarios.length; i++) {
-                        tituloTemarios[i] = temarios.get(i).getTitulo();
+                    for (int i = 0; i < titulosTemarios.length; i++) {
+                        titulosTemarios[i] = temarios.get(i).getTitulo();
                     }
 
-                    sTemarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, tituloTemarios));
+                    sTemarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemarios));
                     sCampos.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, campos));
 
                     sCampos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -102,14 +102,13 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
                                     nuevoValor = etNuevoValor.getText().toString();
 
                                     if (nuevoValor.isEmpty()) {
-                                        etNuevoValor.setError("No has indicado el nuevo valor");
+                                        etNuevoValor.setError("No has indicado el nuevo tema");
                                         etNuevoValor.requestFocus();
                                         return;
                                     }
 
                                     temarioCorrespondiente.setTema(Integer.parseInt(nuevoValor));
 
-                                    modificarTemario(temarioCorrespondiente);
                                     etNuevoValor.setText("");
 
                                     break;
@@ -117,14 +116,13 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
                                     nuevoValor = etNuevoValor.getText().toString();
 
                                     if (nuevoValor.isEmpty()) {
-                                        etNuevoValor.setError("No has indicado el nuevo valor");
+                                        etNuevoValor.setError("No has indicado el nuevo título");
                                         etNuevoValor.requestFocus();
                                         return;
                                     }
 
                                     temarioCorrespondiente.setTitulo(nuevoValor);
 
-                                    modificarTemario(temarioCorrespondiente);
                                     etNuevoValor.setText("");
 
                                     break;
@@ -132,18 +130,58 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
                                     nuevoValor = etNuevoValor.getText().toString();
 
                                     if (nuevoValor.isEmpty()) {
-                                        etNuevoValor.setError("No has indicado el nuevo valor");
+                                        etNuevoValor.setError("No has indicado la nueva URL");
                                         etNuevoValor.requestFocus();
                                         return;
                                     }
 
                                     temarioCorrespondiente.setPdf(nuevoValor);
 
-                                    modificarTemario(temarioCorrespondiente);
                                     etNuevoValor.setText("");
 
                                     break;
                             }
+
+                            apiService.updateTemario(temarioCorrespondiente).enqueue(new Callback<Boolean>() {
+                                @Override
+                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                    if(response.body()) {
+                                        Toast.makeText(getContext(), "Temario modificado correctamente", Toast.LENGTH_SHORT).show();
+
+                                        apiService.getTemarios().enqueue(new Callback<List<Temario>>() {
+                                            @Override
+                                            public void onResponse(Call<List<Temario>> call, Response<List<Temario>> response) {
+                                                temarios.clear();
+                                                if (response.isSuccessful()) {
+                                                    assert response.body() != null;
+                                                    temarios.addAll(response.body());
+
+                                                    titulosTemarios = new String[temarios.size()];
+
+                                                    for (int i = 0; i < titulosTemarios.length; i++) {
+                                                        titulosTemarios[i] = temarios.get(i).getTitulo();
+                                                    }
+
+                                                    sTemarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemarios));
+                                                    sTemarios.setSelection(0);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<List<Temario>> call, Throwable t) {
+                                                Toast.makeText(getContext(), "No se han podido obtener los temarios", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getContext(), "Error al modificar el temario", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Boolean> call, Throwable t) {
+                                    Toast.makeText(getContext(), "No se ha podido modificar el temario", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 }
@@ -167,25 +205,6 @@ public class FragmentModificarTemario extends Fragment implements SpinnerAdapter
             }
         });
     }
-
-    private void modificarTemario(Temario temario) {
-        apiService.updateTemario(temario).enqueue(new Callback<Boolean>() {
-            @Override
-            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if(response.body()) {
-                    Toast.makeText(getContext(), "Temario modificado correctamente", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Error al modificar el temario", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Boolean> call, Throwable t) {
-                Toast.makeText(getContext(), "No se ha podido modificar el temario", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     private Temario obtenerTemario(String tituloTemario) {
         for (Temario temario : temarios) {

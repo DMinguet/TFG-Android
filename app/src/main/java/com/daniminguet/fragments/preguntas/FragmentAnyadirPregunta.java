@@ -68,7 +68,7 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
                 titulosTemarios = new String[temarios.size()];
 
                 for (int i = 0; i < titulosTemarios.length; i++) {
-                    titulosTemarios[i] = temarios.get(i).getTitulo();
+                    titulosTemarios[i] = String.valueOf(temarios.get(i).getTema());
                 }
 
                 sTemarios.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemarios));
@@ -111,6 +111,7 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
             @Override
             public void onClick(View v) {
                 temarioSeleccionado = obtenerTemario(sTemarios.getSelectedItem().toString());
+                examenSeleccionado = obtenerExamen(sExamenes.getSelectedItem().toString());
                 String titulo = etPregunta.getText().toString();
                 Respuesta respuesta = (Respuesta) sRespuestas.getSelectedItem();
 
@@ -122,7 +123,7 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
 
                 Pregunta nuevaPregunta = new Pregunta(titulo, String.valueOf(respuesta), temarioSeleccionado, examenSeleccionado);
 
-                System.out.println(nuevaPregunta.toString());
+                System.out.println(nuevaPregunta);
 
                 apiService.addPregunta(nuevaPregunta).enqueue(new Callback<Boolean>() {
                     @Override
@@ -161,7 +162,7 @@ public class FragmentAnyadirPregunta extends Fragment implements SpinnerAdapter 
 
     private Temario obtenerTemario(String tituloTemario) {
         for (Temario temario : temarios) {
-            if (temario.getTitulo().equals(tituloTemario)) {
+            if (temario.getTema() == Integer.parseInt(tituloTemario)) {
                 return temario;
             }
         }

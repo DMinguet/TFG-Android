@@ -101,4 +101,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(LoginActivity.this, "No se puede volver", Toast.LENGTH_SHORT).show();
+    }
 }

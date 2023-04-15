@@ -12,11 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.daniminguet.R;
-import com.daniminguet.adaptadores.AdaptadorExamenes;
 import com.daniminguet.adaptadores.AdaptadorNotas;
-import com.daniminguet.fragments.examenes.FragmentHacerExamen;
 import com.daniminguet.interfaces.IAPIService;
-import com.daniminguet.models.Examen;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.models.UsuarioHasExamen;
 import com.daniminguet.rest.RestClient;
@@ -54,11 +51,17 @@ public class FragmentNotas extends Fragment {
                     assert response.body() != null;
 
                     List<UsuarioHasExamen> examenesUsuario = new ArrayList<>();
+
+                    System.out.println(usuarioActivo);
+
                     for (UsuarioHasExamen usuarioHasExamen : response.body()) {
-                        if (usuarioActivo.getId() == usuarioHasExamen.getUsuarioId()) {
+                        System.out.println(usuarioActivo.getId() + " " + usuarioHasExamen.getUsuario().getId());
+                        if (usuarioActivo.getId() == usuarioHasExamen.getUsuario().getId()) {
                             examenesUsuario.add(usuarioHasExamen);
                         }
                     }
+
+                    System.out.println(examenesUsuario);
 
                     AdaptadorNotas adaptadorNotas = new AdaptadorNotas(examenesUsuario);
                     rvLista.setHasFixedSize(true);

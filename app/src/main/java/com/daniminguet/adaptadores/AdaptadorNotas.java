@@ -15,7 +15,9 @@ import com.daniminguet.models.Examen;
 import com.daniminguet.models.UsuarioHasExamen;
 import com.daniminguet.rest.RestClient;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -51,7 +53,7 @@ public class AdaptadorNotas extends RecyclerView.Adapter<AdaptadorNotas.ViewHold
         private final TextView tvTituloExamen;
         private final TextView tvFecha;
         private final TextView tvNota;
-        private IAPIService apiService;
+        private final IAPIService apiService;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -62,13 +64,21 @@ public class AdaptadorNotas extends RecyclerView.Adapter<AdaptadorNotas.ViewHold
         }
 
         public void bindExamenUsuario(UsuarioHasExamen examenUsuario) {
-            apiService.getExamen(examenUsuario.getExamenId()).enqueue(new Callback<Examen>() {
+            apiService.getExamen(examenUsuario.getExamen().getId()).enqueue(new Callback<Examen>() {
                 @Override
                 public void onResponse(Call<Examen> call, Response<Examen> response) {
                     assert response.body() != null;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date fecha = null;
+                    try {
+                        fecha = sdf.parse(examenUsuario.getFecha());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     tvTituloExamen.setText(response.body().getTitulo());
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                    tvFecha.setText(sdf.format(examenUsuario.getFecha()));
+                    assert fecha != null;
+                    tvFecha.setText(sdf.format(fecha));
                     tvNota.setText("NOTA: " + examenUsuario.getNota());
                 }
 
