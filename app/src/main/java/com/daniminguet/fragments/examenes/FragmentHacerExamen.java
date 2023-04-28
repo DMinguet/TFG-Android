@@ -95,8 +95,6 @@ public class FragmentHacerExamen extends Fragment {
     }
 
     public void updateRespuesta() {
-        System.out.println(cuenta);
-        System.out.println(Arrays.toString(respuestas));
         listener.onRespuesta(respuestas);
     }
 }

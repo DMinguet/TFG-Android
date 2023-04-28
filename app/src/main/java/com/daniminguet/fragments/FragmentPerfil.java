@@ -41,6 +41,7 @@ public class FragmentPerfil extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("PERFIL DE USUARIO");
         apiService = RestClient.getInstance();
 
         TextView tvNombre = view.findViewById(R.id.tvNombrePerfil);

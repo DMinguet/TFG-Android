@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.daniminguet.fragments.FragmentAdmin;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Examen;
 import com.daniminguet.models.Pregunta;
+import com.daniminguet.models.PreguntaHasExamen;
 import com.daniminguet.models.Respuesta;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
@@ -40,6 +42,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
     private IAPIService apiService;
     private List<Temario> temarios;
     private List<Examen> examenes;
+    private Pregunta preguntaSeleccionada;
 
     public FragmentModificarPregunta() {
         super(R.layout.modificar_pregunta);
@@ -59,6 +62,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         Spinner sNuevoValor = view.findViewById(R.id.sNuevoValor);
         EditText etNuevoValor = view.findViewById(R.id.etValorPregunta);
         Button btnModificar = view.findViewById(R.id.btnModificarPregunta);
+        Button btnRelacionPregExamen = view.findViewById(R.id.btnRelacPregExamen);
         Button btnVolver = view.findViewById(R.id.btnVolverModificarPregunta);
         etNuevoValor.setVisibility(View.INVISIBLE);
 
@@ -148,11 +152,14 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                 public void onClick(View v) {
                                     String preguntaSeleccionada = sPreguntas.getSelectedItem().toString();
                                     String campoSeleccionado = sCampos.getSelectedItem().toString();
+                                    boolean modifPreguntaExamen = false;
+
 
                                     Pregunta preguntaCorrespondiente = obtenerPregunta(preguntaSeleccionada);
 
                                     switch (campoSeleccionado) {
                                         case "Temario":
+                                            modifPreguntaExamen = true;
                                             String temarioSeleccionado = sPreguntas.getSelectedItem().toString();
                                             Temario temarioCorrespondiente = obtenerTemario(temarioSeleccionado);
 
@@ -163,10 +170,66 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                             String examenSeleccionado = sPreguntas.getSelectedItem().toString();
                                             Examen examenCorrespondiente = obtenerExamen(examenSeleccionado);
 
-                                            preguntaCorrespondiente.setExamen(examenCorrespondiente);
+                                            PreguntaHasExamen preguntaExamen = new PreguntaHasExamen(preguntaCorrespondiente, examenCorrespondiente);
+
+                                            apiService.getPreguntasExamenes().enqueue(new Callback<List<PreguntaHasExamen>>() {
+                                                @Override
+                                                public void onResponse(Call<List<PreguntaHasExamen>> call, Response<List<PreguntaHasExamen>> response) {
+                                                    boolean eliminada = false;
+
+                                                    assert response.body() != null;
+                                                    List<PreguntaHasExamen> preguntasExamen = new ArrayList<>(response.body());
+                                                    for (PreguntaHasExamen preguntaHasExamen : preguntasExamen) {
+                                                        if (preguntaHasExamen == preguntaExamen) {
+                                                            eliminada = true;
+                                                            preguntasExamen.remove(preguntaHasExamen);
+                                                            apiService.deletePreguntaExamen(preguntaExamen.getId()).enqueue(new Callback<Boolean>() {
+                                                                @Override
+                                                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                                                    if (response.isSuccessful()) {
+                                                                        Toast.makeText(getContext(), "Se ha eliminado la pregunta", Toast.LENGTH_SHORT).show();
+                                                                    } else {
+                                                                        Toast.makeText(getContext(), "No se ha podido eliminar la pregunta", Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<Boolean> call, Throwable t) {
+                                                                    Toast.makeText(getContext(), "No se ha podido eliminar la pregunta", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    if (!eliminada) {
+                                                        apiService.addPreguntaExamen(preguntaExamen).enqueue(new Callback<Boolean>() {
+                                                            @Override
+                                                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                                                if (response.isSuccessful()) {
+                                                                    Toast.makeText(getContext(), "Se ha añadido la pregunta", Toast.LENGTH_SHORT).show();
+                                                                } else {
+                                                                    Toast.makeText(getContext(), "No se ha podido añadir la pregunta", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<Boolean> call, Throwable t) {
+                                                                Toast.makeText(getContext(), "No se ha podido añadir la pregunta", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<List<PreguntaHasExamen>> call, Throwable t) {
+                                                    Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
 
                                             break;
                                         case "Pregunta":
+                                            modifPreguntaExamen = true;
                                             String nuevoValor = etNuevoValor.getText().toString();
 
                                             if (nuevoValor.isEmpty()) {
@@ -181,6 +244,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                                             break;
                                         case "Respuesta":
+                                            modifPreguntaExamen = true;
                                             Respuesta respuesta = (Respuesta) sNuevoValor.getSelectedItem();
 
                                             preguntaCorrespondiente.setRespuesta(String.valueOf(respuesta));
@@ -188,46 +252,48 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                             break;
                                     }
 
-                                    apiService.updatePregunta(preguntaCorrespondiente).enqueue(new Callback<Boolean>() {
-                                        @Override
-                                        public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                                            if(response.body()) {
-                                                Toast.makeText(getContext(), "Pregunta modificada correctamente", Toast.LENGTH_SHORT).show();
+                                    if (modifPreguntaExamen) {
+                                        apiService.updatePregunta(preguntaCorrespondiente).enqueue(new Callback<Boolean>() {
+                                            @Override
+                                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                                                if(response.body()) {
+                                                    Toast.makeText(getContext(), "Pregunta modificada correctamente", Toast.LENGTH_SHORT).show();
 
-                                                apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
-                                                    @Override
-                                                    public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
-                                                        preguntas.clear();
-                                                        if (response.isSuccessful()) {
-                                                            assert response.body() != null;
-                                                            preguntas.addAll(response.body());
+                                                    apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
+                                                        @Override
+                                                        public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
+                                                            preguntas.clear();
+                                                            if (response.isSuccessful()) {
+                                                                assert response.body() != null;
+                                                                preguntas.addAll(response.body());
 
-                                                            preguntasString = new String[preguntas.size()];
+                                                                preguntasString = new String[preguntas.size()];
 
-                                                            for (int i = 0; i < preguntasString.length; i++) {
-                                                                preguntasString[i] = preguntas.get(i).getPregunta();
+                                                                for (int i = 0; i < preguntasString.length; i++) {
+                                                                    preguntasString[i] = preguntas.get(i).getPregunta();
+                                                                }
+
+                                                                sPreguntas.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, preguntasString));
+                                                                sPreguntas.setSelection(0);
                                                             }
-
-                                                            sPreguntas.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, preguntasString));
-                                                            sPreguntas.setSelection(0);
                                                         }
-                                                    }
 
-                                                    @Override
-                                                    public void onFailure(Call<List<Pregunta>> call, Throwable t) {
-                                                        Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                            } else {
-                                                Toast.makeText(getContext(), "Error al modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                                        @Override
+                                                        public void onFailure(Call<List<Pregunta>> call, Throwable t) {
+                                                            Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                                } else {
+                                                    Toast.makeText(getContext(), "Error al modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                                }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(Call<Boolean> call, Throwable t) {
-                                            Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                                            @Override
+                                            public void onFailure(Call<Boolean> call, Throwable t) {
+                                                Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 }
                             });
                         }
@@ -243,6 +309,27 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
             @Override
             public void onFailure(Call<List<Pregunta>> call, Throwable t) {
                 Toast.makeText(getContext(), "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btnRelacionPregExamen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String preguntaString = sPreguntas.getSelectedItem().toString();
+                preguntaSeleccionada = obtenerPregunta(preguntaString);
+                FragmentRelacionPreguntaExamen fragment = new FragmentRelacionPreguntaExamen();
+
+                Bundle preg = new Bundle();
+                preg.putSerializable("pregunta", preguntaSeleccionada);
+
+                fragment.setArguments(preg);
+
+                FragmentManager manager = requireActivity().getSupportFragmentManager();
+                manager.beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .replace(R.id.frgPrincipal, fragment)
+                        .commit();
             }
         });
 

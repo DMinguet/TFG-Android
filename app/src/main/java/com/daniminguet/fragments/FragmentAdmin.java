@@ -32,6 +32,7 @@ public class FragmentAdmin extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("ADMINISTRACIÓN");
 
         Button btnAnyadirUsuario = view.findViewById(R.id.btnAnyadirUsuarioAdmin);
         Button btnModificarUsuario = view.findViewById(R.id.btnModificarUsuarioAdmin);

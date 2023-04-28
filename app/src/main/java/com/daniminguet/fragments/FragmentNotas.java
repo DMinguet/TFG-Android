@@ -40,6 +40,7 @@ public class FragmentNotas extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("NOTAS DISPONIBLES");
         apiService = RestClient.getInstance();
 
         RecyclerView rvLista = view.findViewById(R.id.rvLista);
@@ -52,16 +53,11 @@ public class FragmentNotas extends Fragment {
 
                     List<UsuarioHasExamen> examenesUsuario = new ArrayList<>();
 
-                    System.out.println(usuarioActivo);
-
                     for (UsuarioHasExamen usuarioHasExamen : response.body()) {
-                        System.out.println(usuarioActivo.getId() + " " + usuarioHasExamen.getUsuario().getId());
                         if (usuarioActivo.getId() == usuarioHasExamen.getUsuario().getId()) {
                             examenesUsuario.add(usuarioHasExamen);
                         }
                     }
-
-                    System.out.println(examenesUsuario);
 
                     AdaptadorNotas adaptadorNotas = new AdaptadorNotas(examenesUsuario);
                     rvLista.setHasFixedSize(true);

@@ -18,6 +18,7 @@ import com.daniminguet.interfaces.IExamenListener;
 import com.daniminguet.interfaces.ITemarioListener;
 import com.daniminguet.models.Examen;
 import com.daniminguet.models.Pregunta;
+import com.daniminguet.models.PreguntaHasExamen;
 import com.daniminguet.models.Temario;
 import com.daniminguet.models.Usuario;
 import com.daniminguet.rest.RestClient;
@@ -127,23 +128,26 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
                 Toast.makeText(MainActivity.this, "Solo tendrás 1 oportunidad. ¡Aprovéchala!", Toast.LENGTH_SHORT).show();
                 Examen examen = response.body();
 
-                apiService.getPreguntas().enqueue(new Callback<List<Pregunta>>() {
+                apiService.getPreguntasExamenes().enqueue(new Callback<List<PreguntaHasExamen>>() {
                     @Override
-                    public void onResponse(Call<List<Pregunta>> call, Response<List<Pregunta>> response) {
-                        List<Pregunta> preguntasExamen = new ArrayList<>();
+                    public void onResponse(Call<List<PreguntaHasExamen>> call, Response<List<PreguntaHasExamen>> response) {
+                        List<Pregunta> preguntasCorrespondientes = new ArrayList<>();
 
                         assert response.body() != null;
-                        for (Pregunta pregunta : response.body()) {
-                            if (pregunta.getExamen().getId() == examen.getId()) {
-                                preguntasExamen.add(pregunta);
+                        List<PreguntaHasExamen> preguntasExamen = new ArrayList<>(response.body());
+
+                        assert examen != null;
+                        for (PreguntaHasExamen pregunta : preguntasExamen) {
+                            if (examen.getId() == pregunta.getExamen().getId()) {
+                                preguntasCorrespondientes.add(pregunta.getPregunta());
                             }
                         }
 
-                        startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", examen).putExtra("preguntas", (Serializable) preguntasExamen));
+                        startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", examen).putExtra("preguntas", (Serializable) preguntasCorrespondientes));
                     }
 
                     @Override
-                    public void onFailure(Call<List<Pregunta>> call, Throwable t) {
+                    public void onFailure(Call<List<PreguntaHasExamen>> call, Throwable t) {
                         Toast.makeText(MainActivity.this, "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
                     }
                 });

@@ -34,6 +34,7 @@ public class FragmentTemarios extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("TEMARIOS DISPONIBLES");
         IAPIService apiService = RestClient.getInstance();
         RecyclerView rvLista = view.findViewById(R.id.rvLista);
 

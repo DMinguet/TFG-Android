@@ -29,6 +29,7 @@ public class FragmentPrincipal extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        getActivity().setTitle("ACADEMIA POLESP");
         Button btnTemarios = view.findViewById(R.id.btnTemarios);
         Button btnExamenes = view.findViewById(R.id.btnExamenes);
         Button btnNotas = view.findViewById(R.id.btnNotas);

@@ -101,8 +101,6 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                     }
 
                     for (int i = 0; i < respuestasCorrectas.length; i++) {
-                        System.out.println("Correcta " + preguntas.get(i).getRespuesta());
-                        System.out.println(respuestasUsuario[i]);
                         if (respuestasCorrectas[i] == respuestasUsuario[i]) {
                             nota++;
                         } else if (respuestasUsuario[i] == null) {
