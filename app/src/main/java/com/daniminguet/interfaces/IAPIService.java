@@ -94,7 +94,7 @@ public interface IAPIService {
     Call<List<PreguntaHasExamen>> getPreguntasExamenes();
 
     @POST("preguntaExamen/add")
-    Call<Boolean> addPreguntaExamen(@Body PreguntaHasExamen usuarioHasExamen);
+    Call<Boolean> addPreguntaExamen(@Body PreguntaHasExamen preguntaHasExamen);
 
     @DELETE("preguntaExamen/{id}")
     Call<Boolean> deletePreguntaExamen(@Path("id") Integer id);

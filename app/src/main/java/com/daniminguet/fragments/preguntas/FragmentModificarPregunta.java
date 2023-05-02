@@ -37,11 +37,9 @@ import retrofit2.Response;
 
 public class FragmentModificarPregunta extends Fragment implements SpinnerAdapter {
     private String[] preguntasString;
-    private String[] titulosExamen;
     private List<Pregunta> preguntas;
     private IAPIService apiService;
     private List<Temario> temarios;
-    private List<Examen> examenes;
     private Pregunta preguntaSeleccionada;
 
     public FragmentModificarPregunta() {
@@ -55,7 +53,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         apiService = RestClient.getInstance();
         preguntas = new ArrayList<>();
         temarios = new ArrayList<>();
-        examenes = new ArrayList<>();
 
         Spinner sPreguntas = view.findViewById(R.id.sPreguntasModificar);
         Spinner sCampos = view.findViewById(R.id.sCamposPregunta);
@@ -73,7 +70,7 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                     assert response.body() != null;
                     preguntas.addAll(response.body());
                     preguntasString = new String[preguntas.size()];
-                    String[] campos = {"Temario", "Examen", "Pregunta", "Respuesta"};
+                    String[] campos = {"Temario", "Pregunta", "Respuesta"};
 
                     for (int i = 0; i < preguntasString.length; i++) {
                         preguntasString[i] = preguntas.get(i).getPregunta();
@@ -95,24 +92,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
 
                             sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemario));
 
-                            apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
-                                @Override
-                                public void onResponse(Call<List<Examen>> call, Response<List<Examen>> response) {
-                                    assert response.body() != null;
-                                    examenes.addAll(response.body());
-                                    titulosExamen = new String[examenes.size()];
-
-                                    for (int i = 0; i < titulosExamen.length; i++) {
-                                        titulosExamen[i] = examenes.get(i).getTitulo();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<List<Examen>> call, Throwable t) {
-                                    Toast.makeText(getContext(), "No se han podido obtener los examenes", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
                             sCampos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -122,11 +101,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                         case "Temario":
                                             sNuevoValor.setVisibility(View.VISIBLE);
                                             sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosTemario));
-                                            etNuevoValor.setVisibility(View.INVISIBLE);
-                                            break;
-                                        case "Examen":
-                                            sNuevoValor.setVisibility(View.VISIBLE);
-                                            sNuevoValor.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, titulosExamen));
                                             etNuevoValor.setVisibility(View.INVISIBLE);
                                             break;
                                         case "Pregunta":
@@ -164,68 +138,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
                                             Temario temarioCorrespondiente = obtenerTemario(temarioSeleccionado);
 
                                             preguntaCorrespondiente.setTemario(temarioCorrespondiente);
-
-                                            break;
-                                        case "Examen":
-                                            String examenSeleccionado = sPreguntas.getSelectedItem().toString();
-                                            Examen examenCorrespondiente = obtenerExamen(examenSeleccionado);
-
-                                            PreguntaHasExamen preguntaExamen = new PreguntaHasExamen(preguntaCorrespondiente, examenCorrespondiente);
-
-                                            apiService.getPreguntasExamenes().enqueue(new Callback<List<PreguntaHasExamen>>() {
-                                                @Override
-                                                public void onResponse(Call<List<PreguntaHasExamen>> call, Response<List<PreguntaHasExamen>> response) {
-                                                    boolean eliminada = false;
-
-                                                    assert response.body() != null;
-                                                    List<PreguntaHasExamen> preguntasExamen = new ArrayList<>(response.body());
-                                                    for (PreguntaHasExamen preguntaHasExamen : preguntasExamen) {
-                                                        if (preguntaHasExamen == preguntaExamen) {
-                                                            eliminada = true;
-                                                            preguntasExamen.remove(preguntaHasExamen);
-                                                            apiService.deletePreguntaExamen(preguntaExamen.getId()).enqueue(new Callback<Boolean>() {
-                                                                @Override
-                                                                public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                                                                    if (response.isSuccessful()) {
-                                                                        Toast.makeText(getContext(), "Se ha eliminado la pregunta", Toast.LENGTH_SHORT).show();
-                                                                    } else {
-                                                                        Toast.makeText(getContext(), "No se ha podido eliminar la pregunta", Toast.LENGTH_SHORT).show();
-                                                                    }
-                                                                }
-
-                                                                @Override
-                                                                public void onFailure(Call<Boolean> call, Throwable t) {
-                                                                    Toast.makeText(getContext(), "No se ha podido eliminar la pregunta", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            });
-                                                            break;
-                                                        }
-                                                    }
-
-                                                    if (!eliminada) {
-                                                        apiService.addPreguntaExamen(preguntaExamen).enqueue(new Callback<Boolean>() {
-                                                            @Override
-                                                            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                                                                if (response.isSuccessful()) {
-                                                                    Toast.makeText(getContext(), "Se ha añadido la pregunta", Toast.LENGTH_SHORT).show();
-                                                                } else {
-                                                                    Toast.makeText(getContext(), "No se ha podido añadir la pregunta", Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }
-
-                                                            @Override
-                                                            public void onFailure(Call<Boolean> call, Throwable t) {
-                                                                Toast.makeText(getContext(), "No se ha podido añadir la pregunta", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onFailure(Call<List<PreguntaHasExamen>> call, Throwable t) {
-                                                    Toast.makeText(getContext(), "No se ha podido modificar la pregunta", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
 
                                             break;
                                         case "Pregunta":
@@ -360,15 +272,6 @@ public class FragmentModificarPregunta extends Fragment implements SpinnerAdapte
         for (Temario temario : temarios) {
             if (temario.getTitulo().equals(tituloTemario)) {
                 return temario;
-            }
-        }
-        return null;
-    }
-
-    private Examen obtenerExamen(String tituloExamen) {
-        for (Examen examen : examenes) {
-            if (examen.getTitulo().equals(tituloExamen)) {
-                return examen;
             }
         }
         return null;

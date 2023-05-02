@@ -32,13 +32,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPreguntaRelacion" />
 
-    <RadioGroup
-        android:id="@+id/rgExamenesContiene"
+    <Spinner
+        android:id="@+id/sExamenesContiene"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/textView40"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView40"
         app:layout_constraintTop_toBottomOf="@+id/textView40" />
 
@@ -47,10 +46,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="DESVINCULAR EXAMEN/ES"
-        app:layout_constraintEnd_toEndOf="@+id/rgExamenesContiene"
-        app:layout_constraintStart_toStartOf="@+id/rgExamenesContiene"
-        app:layout_constraintTop_toBottomOf="@+id/rgExamenesContiene" />
+        android:text="DESVINCULAR EXAMEN"
+        app:layout_constraintEnd_toEndOf="@+id/sExamenesContiene"
+        app:layout_constraintStart_toStartOf="@+id/sExamenesContiene"
+        app:layout_constraintTop_toBottomOf="@+id/sExamenesContiene" />
 
     <TextView
         android:id="@+id/textView42"
@@ -66,13 +65,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnDesvincularExamen" />
 
-    <RadioGroup
-        android:id="@+id/rgExamenesNoContiene"
+    <Spinner
+        android:id="@+id/sExamenesNoContiene"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/textView42"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/textView42"
         app:layout_constraintTop_toBottomOf="@+id/textView42" />
 
@@ -81,10 +79,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="VINCULAR EXAMEN/ES"
-        app:layout_constraintEnd_toEndOf="@+id/rgExamenesNoContiene"
-        app:layout_constraintStart_toStartOf="@+id/rgExamenesNoContiene"
-        app:layout_constraintTop_toBottomOf="@+id/rgExamenesNoContiene" />
+        android:text="VINCULAR EXAMEN"
+        app:layout_constraintEnd_toEndOf="@+id/sExamenesNoContiene"
+        app:layout_constraintStart_toStartOf="@+id/sExamenesNoContiene"
+        app:layout_constraintTop_toBottomOf="@+id/sExamenesNoContiene" />
 
     <Button
         android:id="@+id/btnVolverRelaciones"
