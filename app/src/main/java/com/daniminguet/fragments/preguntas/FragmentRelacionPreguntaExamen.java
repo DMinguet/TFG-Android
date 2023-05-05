@@ -39,7 +39,7 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
     private List<String> titulosExamenCorresp, titulosExamenNoCorresp;
     private IAPIService apiService;
     private List<PreguntaHasExamen> preguntasExamenes;
-    private List<Examen> examenesCorresp, examenesNoCorresp;
+    private List<Examen> examenes, examenesCorresp, examenesNoCorresp;
     private PreguntaHasExamen preguntaExamenSeleccionadoContiene, preguntaExamenSeleccionadoNoContiene;
 
     public FragmentRelacionPreguntaExamen() {
@@ -55,6 +55,7 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
         titulosExamenCorresp = new ArrayList<>();
         titulosExamenNoCorresp = new ArrayList<>();
         preguntasExamenes = new ArrayList<>();
+        examenes = new ArrayList<>();
         examenesCorresp = new ArrayList<>();
         examenesNoCorresp = new ArrayList<>();
 
@@ -86,7 +87,8 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
                     @Override
                     public void onResponse(Call<List<Examen>> call, Response<List<Examen>> response) {
                         assert response.body() != null;
-                        examenesNoCorresp.addAll(response.body());
+                        examenes.addAll(response.body());
+                        examenesNoCorresp.addAll(examenes);
 
                         for (Examen examen : examenesCorresp) {
                             examenesNoCorresp.removeIf(examen1 -> examen.getId() == examen1.getId());
@@ -127,7 +129,7 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
         sExamenesNoContiene.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                preguntaExamenSeleccionadoNoContiene = obtenerPreguntaExamen(sExamenesNoContiene.getSelectedItem().toString());
+                preguntaExamenSeleccionadoNoContiene = new PreguntaHasExamen(pregunta, obtenerExamen(sExamenesNoContiene.getSelectedItem().toString()));
             }
 
             @Override
@@ -211,6 +213,7 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
         btnVincular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println(preguntaExamenSeleccionadoNoContiene);
                 apiService.addPreguntaExamen(preguntaExamenSeleccionadoNoContiene).enqueue(new Callback<Boolean>() {
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
@@ -297,6 +300,15 @@ public class FragmentRelacionPreguntaExamen extends Fragment implements SpinnerA
         for (PreguntaHasExamen preguntaHasExamen : preguntasExamenes) {
             if (preguntaHasExamen.getExamen().getTitulo().equals(tituloExamen) && preguntaHasExamen.getPregunta().getId() == pregunta.getId()) {
                 return preguntaHasExamen;
+            }
+        }
+        return null;
+    }
+
+    private Examen obtenerExamen (String titulo) {
+        for (Examen examen : examenes) {
+            if (examen.getTitulo().equals(titulo)) {
+                return examen;
             }
         }
         return null;
