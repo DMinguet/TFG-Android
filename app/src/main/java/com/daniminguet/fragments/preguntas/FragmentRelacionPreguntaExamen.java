@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -24,7 +22,6 @@ import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Examen;
 import com.daniminguet.models.Pregunta;
 import com.daniminguet.models.PreguntaHasExamen;
-import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
 
 import java.util.ArrayList;
