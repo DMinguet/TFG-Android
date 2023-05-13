@@ -31,8 +31,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ExamenActivity extends AppCompatActivity implements FragmentHacerExamen.IOnAttachListener, FragmentHacerExamen.OnRespuestaListener {
-
-    private final int NUM_PREGUNTAS = 10;
     private IAPIService apiService;
     private Usuario usuarioActivo;
     private Examen examenSeleccionado;
@@ -41,6 +39,7 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
     private int cuenta;
     private double nota;
     private Respuesta[] respuestasUsuario;
+    private int numPreguntas;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -55,6 +54,8 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
         TextView tvInfo2 = findViewById(R.id.tvInfo2);
         Button btnSiguiente = findViewById(R.id.btnSiguiente);
         Button btnEmpezar = findViewById(R.id.btnEmpezar);
+
+        tvInfo2.setText("UNA PREGUNTA MAL RESTARÁ 0,25 DE LA NOTA, TEN EN CUENTA QUE ESTO VARIARÁ DEPENDIENDO DEL NÚMERO TOTAL DE PREGUNTAS. HAY UN TOTAL DE " + numPreguntas + " PREGUNTAS");
 
         btnSiguiente.setVisibility(View.INVISIBLE);
         setTitle(examenSeleccionado.getTitulo());
@@ -81,7 +82,7 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
             public void onClick(View v) {
                 cuenta++;
 
-                if (cuenta == NUM_PREGUNTAS-1) {
+                if (cuenta == numPreguntas-1) {
                     btnSiguiente.setText("ACABAR EXAMEN");
                     FragmentManager manager = getSupportFragmentManager();
                     manager.beginTransaction()
@@ -89,14 +90,14 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                             .addToBackStack(null)
                             .replace(R.id.frgPreguntas, FragmentHacerExamen.class, null)
                             .commit();
-                } else if (cuenta == NUM_PREGUNTAS) {
+                } else if (cuenta == numPreguntas) {
                     examenAcabado = true;
 
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     String fechaExamen = sdf.format(new Date());
 
-                    Respuesta[] respuestasCorrectas = new Respuesta[NUM_PREGUNTAS];
-                    for (int i = 0; i < preguntas.size(); i++) {
+                    Respuesta[] respuestasCorrectas = new Respuesta[numPreguntas];
+                    for (int i = 0; i < numPreguntas; i++) {
                         respuestasCorrectas[i] = Respuesta.valueOf(preguntas.get(i).getRespuesta());
                     }
 
@@ -110,6 +111,8 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                         }
                     }
 
+                    nota = (nota / numPreguntas) * 10;
+
                     UsuarioHasExamen resultadoExamen = new UsuarioHasExamen(usuarioActivo, examenSeleccionado, nota, fechaExamen);
                     apiService.addExamenUsuario(resultadoExamen).enqueue(new Callback<Boolean>() {
                         @Override
@@ -118,7 +121,7 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                                 if (nota >= 5) {
                                     Toast.makeText(ExamenActivity.this, "Enhorabuena, has sacado un " + nota, Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(ExamenActivity.this, "Debes esforzarte, has sacado un " + nota, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ExamenActivity.this, "Debes esforzarte más, has sacado un " + nota, Toast.LENGTH_LONG).show();
                                 }
                                 Toast.makeText(ExamenActivity.this, "Podrás ver el resultado también en el apartado de las notas", Toast.LENGTH_SHORT).show();
                             } else {
@@ -147,19 +150,14 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
     private void cargarDatos() {
         examenAcabado = false;
         examenEmpezado = false;
-        obtenerPreguntas();
+        preguntas = new ArrayList<>();
+        preguntas = (List<Pregunta>) getIntent().getSerializableExtra("preguntas");
+        numPreguntas = preguntas.size();
         cargarUsuarioActivo();
         cargarExamenActivo();
-        preguntas = new ArrayList<>();
-        respuestasUsuario = new Respuesta[NUM_PREGUNTAS];
+        respuestasUsuario = new Respuesta[numPreguntas];
         cuenta = 0;
         nota = 0;
-    }
-
-    private void obtenerPreguntas() {
-        if (preguntas == null) {
-            preguntas = (List<Pregunta>) getIntent().getSerializableExtra("preguntas");
-        }
     }
 
     private void cargarUsuarioActivo() {
