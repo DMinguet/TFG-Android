@@ -92,7 +92,8 @@ public class FragmentEliminarTemario extends Fragment implements SpinnerAdapter 
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if(Boolean.TRUE.equals(response.body())) {
-                            Toast.makeText(getContext(), "Temario eliminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Temario y datos relacionados eliminados", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Las preguntas relacionadas con el temario eliminado deberás asignarles un nuevo temario", Toast.LENGTH_LONG).show();
 
                             apiService.getTemarios().enqueue(new Callback<List<Temario>>() {
                                 @Override

@@ -73,7 +73,7 @@ public class FragmentEliminarExamen extends Fragment implements SpinnerAdapter {
                                 @Override
                                 public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                                     if(Boolean.TRUE.equals(response.body())) {
-                                        Toast.makeText(getContext(), "Examen eliminado", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getContext(), "Examen y datos relacionados eliminados", Toast.LENGTH_SHORT).show();
 
                                         apiService.getExamenes().enqueue(new Callback<List<Examen>>() {
                                             @Override

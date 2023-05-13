@@ -18,6 +18,7 @@ import com.daniminguet.interfaces.ITemarioListener;
 import com.daniminguet.models.Temario;
 import com.daniminguet.rest.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -43,8 +44,12 @@ public class FragmentTemarios extends Fragment {
             public void onResponse(@NonNull Call<List<Temario>> call, @NonNull Response<List<Temario>> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
+                    List<Temario> temarios = new ArrayList<>();
+                    temarios.addAll(response.body());
 
-                    AdaptadorTemarios adaptadorTemarios = new AdaptadorTemarios(response.body(), listener);
+                    temarios.remove(0);
+
+                    AdaptadorTemarios adaptadorTemarios = new AdaptadorTemarios(temarios, listener);
                     rvLista.setHasFixedSize(true);
                     rvLista.setAdapter(adaptadorTemarios);
                     rvLista.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

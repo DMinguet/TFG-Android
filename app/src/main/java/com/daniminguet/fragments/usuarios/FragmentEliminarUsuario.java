@@ -100,7 +100,7 @@ public class FragmentEliminarUsuario extends Fragment implements SpinnerAdapter 
                     @Override
                     public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                         if(Boolean.TRUE.equals(response.body())) {
-                            Toast.makeText(getContext(), "Usuario eliminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Usuario y datos relacionados eliminados", Toast.LENGTH_SHORT).show();
                             tvNombreApellidos.setText("");
                             tvEmail.setText("");
 
