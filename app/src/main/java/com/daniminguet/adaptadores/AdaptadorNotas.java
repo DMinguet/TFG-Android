@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.daniminguet.R;
 import com.daniminguet.interfaces.IAPIService;
 import com.daniminguet.models.Examen;
+import com.daniminguet.models.Usuario;
 import com.daniminguet.models.UsuarioHasExamen;
 import com.daniminguet.rest.RestClient;
 
@@ -51,6 +52,7 @@ public class AdaptadorNotas extends RecyclerView.Adapter<AdaptadorNotas.ViewHold
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvTituloExamen;
+        private final TextView tvAlumno;
         private final TextView tvFecha;
         private final TextView tvNota;
         private final IAPIService apiService;
@@ -58,6 +60,7 @@ public class AdaptadorNotas extends RecyclerView.Adapter<AdaptadorNotas.ViewHold
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.tvTituloExamen = itemView.findViewById(R.id.tvExamenNotas);
+            this.tvAlumno = itemView.findViewById(R.id.tvAlumno);
             this.tvFecha = itemView.findViewById(R.id.tvFecha);
             this.tvNota = itemView.findViewById(R.id.tvNota);
             this.apiService = RestClient.getInstance();
@@ -76,7 +79,14 @@ public class AdaptadorNotas extends RecyclerView.Adapter<AdaptadorNotas.ViewHold
                         e.printStackTrace();
                     }
 
+                    //Guarda solo el nombre y el primer apellido
+                    Usuario alumno = examenUsuario.getUsuario();
+                    int indiceEspacio = alumno.getApellidos().indexOf(" ");
+                    StringBuilder nombreApellido = new StringBuilder("");
+                    nombreApellido.append(alumno.getNombre()).append(" ").append(alumno.getApellidos().substring(0, indiceEspacio));
+
                     tvTituloExamen.setText(response.body().getTitulo());
+                    tvAlumno.setText(nombreApellido);
                     assert fecha != null;
                     tvFecha.setText(sdf.format(fecha));
                     tvNota.setText("NOTA: " + examenUsuario.getNota());

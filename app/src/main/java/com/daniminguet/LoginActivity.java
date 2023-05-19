@@ -78,8 +78,6 @@ public class LoginActivity extends AppCompatActivity {
 
         usuarioActivo = new Usuario(username, password);
 
-        System.out.println(usuarioActivo);
-
         Call<Usuario> usuarioCall = apiService.logUsuario(usuarioActivo);
 
         usuarioCall.enqueue(new Callback<Usuario>() {

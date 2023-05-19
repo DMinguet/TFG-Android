@@ -116,12 +116,8 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                         nota = (nota / numPreguntas) * 10;
                     }
 
-                    System.out.println(nota);
-
                     DecimalFormat decimalFormat = new DecimalFormat("#.##");
                     String notaDosDecimales = decimalFormat.format(nota);
-
-                    System.out.println(notaDosDecimales);
 
                     nota = Double.parseDouble(notaDosDecimales);
 
