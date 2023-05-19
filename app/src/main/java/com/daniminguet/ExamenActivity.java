@@ -21,6 +21,7 @@ import com.daniminguet.models.Usuario;
 import com.daniminguet.models.UsuarioHasExamen;
 import com.daniminguet.rest.RestClient;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,6 +115,15 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
                     if (numPreguntas != 10) {
                         nota = (nota / numPreguntas) * 10;
                     }
+
+                    System.out.println(nota);
+
+                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                    String notaDosDecimales = decimalFormat.format(nota);
+
+                    System.out.println(notaDosDecimales);
+
+                    nota = Double.parseDouble(notaDosDecimales);
 
                     UsuarioHasExamen resultadoExamen = new UsuarioHasExamen(usuarioActivo, examenSeleccionado, nota, fechaExamen);
                     apiService.addExamenUsuario(resultadoExamen).enqueue(new Callback<Boolean>() {
