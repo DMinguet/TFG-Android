@@ -104,20 +104,9 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
     }
 
     @Override
-    public void onTemarioSeleccionado(int id) {
-        apiService.getTemario(id).enqueue(new Callback<Temario>() {
-            @Override
-            public void onResponse(Call<Temario> call, Response<Temario> response) {
-                assert response.body() != null;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(response.body().getPdf()));
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Call<Temario> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error al abrir el enlace del temario", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void onTemarioSeleccionado(Temario temario) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(temario.getPdf()));
+        startActivity(intent);
     }
 
     @Override

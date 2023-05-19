@@ -41,7 +41,7 @@ public class AdaptadorTemarios extends RecyclerView.Adapter<AdaptadorTemarios.Vi
         return temarios.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvNumTema;
         private final TextView tvTituloTema;
         private final ITemarioListener temarioListener;
@@ -62,7 +62,7 @@ public class AdaptadorTemarios extends RecyclerView.Adapter<AdaptadorTemarios.Vi
         @Override
         public void onClick(View v) {
             if (temarioListener != null) {
-                temarioListener.onTemarioSeleccionado(getAdapterPosition() +1);
+                temarioListener.onTemarioSeleccionado(temarios.get(getAdapterPosition()));
             }
         }
     }
