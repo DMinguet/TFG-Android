@@ -55,7 +55,7 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
         Button btnSiguiente = findViewById(R.id.btnSiguiente);
         Button btnEmpezar = findViewById(R.id.btnEmpezar);
 
-        tvInfo2.setText("UNA PREGUNTA MAL RESTARÁ 0,25 DE LA NOTA, TEN EN CUENTA QUE ESTO VARIARÁ DEPENDIENDO DEL NÚMERO TOTAL DE PREGUNTAS. HAY UN TOTAL DE " + numPreguntas + " PREGUNTAS");
+        tvInfo2.setText("UNA PREGUNTA MAL RESTARÁ 1,25 DE LA NOTA, TEN EN CUENTA QUE ESTO VARIARÁ DEPENDIENDO DEL NÚMERO TOTAL DE PREGUNTAS. HAY UN TOTAL DE " + numPreguntas + " PREGUNTAS");
 
         btnSiguiente.setVisibility(View.INVISIBLE);
         setTitle(examenSeleccionado.getTitulo());
@@ -103,15 +103,17 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
 
                     for (int i = 0; i < respuestasCorrectas.length; i++) {
                         if (respuestasCorrectas[i] == respuestasUsuario[i]) {
-                            nota++;
+                            //Al haber seleccionado opción correcta, no suma ni resta
                         } else if (respuestasUsuario[i] == null) {
-                            //Al no haber seleccionado ninguna opcion, no suma ni resta
+                            nota--;
                         } else {
-                            nota -= 0.25;
+                            nota -= 1.25;
                         }
                     }
 
-                    nota = (nota / numPreguntas) * 10;
+                    if (numPreguntas != 10) {
+                        nota = (nota / numPreguntas) * 10;
+                    }
 
                     UsuarioHasExamen resultadoExamen = new UsuarioHasExamen(usuarioActivo, examenSeleccionado, nota, fechaExamen);
                     apiService.addExamenUsuario(resultadoExamen).enqueue(new Callback<Boolean>() {
@@ -157,7 +159,7 @@ public class ExamenActivity extends AppCompatActivity implements FragmentHacerEx
         cargarExamenActivo();
         respuestasUsuario = new Respuesta[numPreguntas];
         cuenta = 0;
-        nota = 0;
+        nota = numPreguntas;
     }
 
     private void cargarUsuarioActivo() {

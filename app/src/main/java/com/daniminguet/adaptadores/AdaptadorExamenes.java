@@ -41,7 +41,7 @@ public class AdaptadorExamenes extends RecyclerView.Adapter<AdaptadorExamenes.Vi
         return examenes.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private final TextView tvTituloExamen;
         private final IExamenListener examenListener;
 
@@ -59,7 +59,7 @@ public class AdaptadorExamenes extends RecyclerView.Adapter<AdaptadorExamenes.Vi
         @Override
         public void onClick(View v) {
             if (examenListener != null) {
-                examenListener.onExamenSeleccionado(getAdapterPosition() + 1);
+                examenListener.onExamenSeleccionado(examenes.get(getAdapterPosition()));
             }
         }
     }

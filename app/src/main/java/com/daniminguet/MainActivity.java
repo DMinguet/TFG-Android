@@ -121,41 +121,30 @@ public class MainActivity extends AppCompatActivity implements FragmentPrincipal
     }
 
     @Override
-    public void onExamenSeleccionado(int id) {
-        apiService.getExamen(id).enqueue(new Callback<Examen>() {
+    public void onExamenSeleccionado(Examen examenSeleccionado) {
+        Toast.makeText(MainActivity.this, "Solo tendrás 1 oportunidad. ¡Aprovéchala!", Toast.LENGTH_SHORT).show();
+
+        apiService.getPreguntasExamenes().enqueue(new Callback<List<PreguntaHasExamen>>() {
             @Override
-            public void onResponse(Call<Examen> call, Response<Examen> response) {
-                Toast.makeText(MainActivity.this, "Solo tendrás 1 oportunidad. ¡Aprovéchala!", Toast.LENGTH_SHORT).show();
-                Examen examen = response.body();
+            public void onResponse(Call<List<PreguntaHasExamen>> call, Response<List<PreguntaHasExamen>> response) {
+                List<Pregunta> preguntasCorrespondientes = new ArrayList<>();
 
-                apiService.getPreguntasExamenes().enqueue(new Callback<List<PreguntaHasExamen>>() {
-                    @Override
-                    public void onResponse(Call<List<PreguntaHasExamen>> call, Response<List<PreguntaHasExamen>> response) {
-                        List<Pregunta> preguntasCorrespondientes = new ArrayList<>();
+                assert response.body() != null;
+                List<PreguntaHasExamen> preguntasExamen = new ArrayList<>(response.body());
 
-                        assert response.body() != null;
-                        List<PreguntaHasExamen> preguntasExamen = new ArrayList<>(response.body());
-
-                        assert examen != null;
-                        for (PreguntaHasExamen pregunta : preguntasExamen) {
-                            if (examen.getId() == pregunta.getExamen().getId()) {
-                                preguntasCorrespondientes.add(pregunta.getPregunta());
-                            }
-                        }
-
-                        startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", examen).putExtra("preguntas", (Serializable) preguntasCorrespondientes));
+                assert examenSeleccionado != null;
+                for (PreguntaHasExamen pregunta : preguntasExamen) {
+                    if (examenSeleccionado.getId() == pregunta.getExamen().getId()) {
+                        preguntasCorrespondientes.add(pregunta.getPregunta());
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<List<PreguntaHasExamen>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                startActivity(new Intent(MainActivity.this, ExamenActivity.class).putExtra("usuario", usuarioActivo).putExtra("examen", examenSeleccionado).putExtra("preguntas", (Serializable) preguntasCorrespondientes));
             }
 
             @Override
-            public void onFailure(Call<Examen> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "Error al iniciar el examen", Toast.LENGTH_SHORT).show();
+            public void onFailure(Call<List<PreguntaHasExamen>> call, Throwable t) {
+                Toast.makeText(MainActivity.this, "No se han podido obtener las preguntas", Toast.LENGTH_SHORT).show();
             }
         });
     }
